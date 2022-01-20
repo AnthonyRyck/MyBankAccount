@@ -1,0 +1,6 @@
+# MyBankAccount
+En cours de développement...
+
+## But
+L'application sera une aide pour la gestion des comptes bancaires et des budgets.  
+Rédaction à faire ...
