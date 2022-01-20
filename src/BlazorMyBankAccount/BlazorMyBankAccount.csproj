@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BankDataAccess\BankDataAccess.csproj" />
+    <ProjectReference Include="..\RyckBlazor\RyckBlazor.csproj" />
   </ItemGroup>
 
 </Project>
