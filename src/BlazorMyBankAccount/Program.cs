@@ -1,7 +1,6 @@
 using BlazorMyBankAccount.Areas.Identity;
 using BlazorMyBankAccount.Data;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using BankDataAccess;
@@ -38,6 +37,10 @@ builder.Services.AddDbContextPool<bankingContext>(opt => opt.UseMySql(connection
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+
+// Services pour l'app
+builder.Services.AddScoped<IUsersViewModel, UsersViewModel>();
+
 
 var app = builder.Build();
 
