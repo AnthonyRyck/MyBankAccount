@@ -13,8 +13,14 @@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Accueil
             </NavLink>
+
+			<AuthorizeView Roles="Admin, Manager">
+				<NavLink class="nav-link" href="gestionuser" Match="NavLinkMatch.All">
+					<span class="oi oi-people" aria-hidden="true"></span> Utilisateurs
+				</NavLink>
+			</AuthorizeView>
+
         </div>
-        
     </nav>
 </div>
 
