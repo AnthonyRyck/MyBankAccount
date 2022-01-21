@@ -1,12 +1,10 @@
 ﻿using BankDataAccess;
-using Microsoft.AspNetCore.Identity;
-
 
 namespace BlazorMyBankAccount.Data
 {
     public class DataInitializer
     {
-        public static async Task InitIdentityData(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        internal static async Task InitIdentityData(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             var roles = Enum.GetNames(typeof(Role));
 
@@ -47,7 +45,15 @@ namespace BlazorMyBankAccount.Data
         /// </summary>
         /// <param name="dbContext"></param>
         /// <returns></returns>
-        internal async static Task InitIdentityData(bankingContext dbContext)
+        internal async static Task InitDataBank(bankingContext dbContext)
+        {
+            await InitTransaction(dbContext);
+            await InitDateTraitement(dbContext);
+
+            await dbContext.SaveChangesAsync();
+        }
+
+        private async static Task InitTransaction(bankingContext dbContext)
         {
             Typestransaction typeVirement = new Typestransaction();
             typeVirement.Nom = "Virement";
@@ -63,8 +69,21 @@ namespace BlazorMyBankAccount.Data
             typePrelevement.Nom = "Prélèvement";
             typePrelevement.Description = "Prélèvement bancaire";
             await dbContext.AddAsync(typePrelevement);
+        }
 
-            await dbContext.SaveChangesAsync();
+        private async static Task InitDateTraitement(bankingContext dbContext)
+        {
+            int anneeEnCours = DateTime.Now.Year;
+            Anneetraitement anneetraitement = new Anneetraitement();
+            anneetraitement.Annee = anneeEnCours;
+            await dbContext.AddAsync(anneetraitement);
+
+            for (int mois = 1; mois <= 12; mois++)
+            {
+                Moistraitement moistraitement = new Moistraitement();
+                moistraitement.Mois = mois;
+                await dbContext.AddAsync(moistraitement);
+            }
         }
     }
 }

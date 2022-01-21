@@ -95,7 +95,8 @@ using (var scope = scopeFactory.CreateScope())
 
         // Ajout dans la base de l'utilisateur "root"
         await DataInitializer.InitIdentityData(roleManager, userManager);
-        await DataInitializer.InitIdentityData(dbContext);
+        // Ajout donnée de base pour schéma Bank
+        await DataInitializer.InitDataBank(dbContext);
     }
 }
 
