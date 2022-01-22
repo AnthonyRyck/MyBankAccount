@@ -1,0 +1,99 @@
+﻿@inject ICompteConfig ViewModel
+
+<h2>Comptes</h2>
+
+@if(@ViewModel.IsLoaded)
+{
+<div>
+	<div class="padding-10">
+		@if (!ViewModel.DialogIsOpenNewAccount)
+		{
+			<RadzenButton Text="Nouveau Compte"
+						  Icon="add_circle"
+						  ButtonStyle="ButtonStyle.Secondary"
+						  Click="ViewModel.OpenNewAccount" />
+		}
+		else
+		{
+			<div class="col-xl-6">
+				<EditForm OnValidSubmit="@ViewModel.OnValidSubmit"
+						  Model="@ViewModel.CompteValidation">
+					<RadzenCard>
+						@* Super IMPORTANT !!! *@
+						<DataAnnotationsValidator />
+
+						<div>
+							<p>
+								<b>Ne pas mettre d'infos sensibles comme un numéro de compte, code d'accès,...</b>
+							</p>
+						</div>
+
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.CompteValidation.NomCompte)" />
+							</div>
+							<RadzenTextBox Placeholder="Nom..."
+										   @bind-Value="ViewModel.CompteValidation.NomCompte"
+										   Style="width 300px" />
+						</div>
+
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.CompteValidation.Description)" />
+							</div>
+							<RadzenTextBox Placeholder="Description..."
+										   @bind-Value="ViewModel.CompteValidation.Description"
+										   Style="width 300px" />
+						</div>
+					</RadzenCard>
+
+					<span class="margin-10px">
+						<button type="submit" class="padding-5">Ajouter</button>
+
+						<button type="reset"
+								class="padding-5"
+								@onclick="ViewModel.CloseNewAccount">
+							Terminer
+						</button>
+					</span>
+				</EditForm>
+			</div>
+		}
+	</div>
+</div>
+
+<div class="col-6">
+	<RadzenGrid AllowFiltering="true"
+				FilterCaseSensitivity="FilterCaseSensitivity.Default"
+				AllowPaging="true"
+				PageSize="10"
+				AllowSorting="true"
+				Data="@ViewModel.AllAccounts"
+				TItem="Compte"
+				EmptyText="Aucun compte"
+				@ref="ViewModel.CompteGrid">
+		<Columns>
+			<RadzenGridColumn TItem="Compte"
+								Property="Nomcompte"
+								Title="Nom"
+								Width="150px" />
+
+			<RadzenGridColumn TItem="Compte"
+								Property="Description"
+								Title="Description" />
+		</Columns>
+	</RadzenGrid>
+</div>
+}
+else
+{
+    <div>Chargement des comptes en cours ...</div>
+}
+
+@code {
+   	protected override async Task OnInitializedAsync()
+	{
+		ViewModel.SetStateHasChanged(StateHasChanged);
+		await ViewModel.LoadAllAccounts();
+	}
+}

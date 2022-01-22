@@ -3,9 +3,9 @@ using BlazorMyBankAccount.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using BankDataAccess;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,9 +38,17 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
-// Services pour l'app
-builder.Services.AddScoped<IUsersViewModel, UsersViewModel>();
+// Services Radzen
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
 
+// Services pour l'app
+builder.Services.AddScoped<ICompteBanking, CompteBanking>();
+
+builder.Services.AddScoped<IUsersViewModel, UsersViewModel>();
+builder.Services.AddScoped<ICompteConfig, CompteConfigViewModel>();
 
 var app = builder.Build();
 
@@ -58,7 +66,7 @@ else
 
 // Pour forcer l'application en Francais.
 var cultureInfo = new CultureInfo("fr-Fr");
-cultureInfo.NumberFormat.CurrencySymbol = "�";
+cultureInfo.NumberFormat.CurrencySymbol = "€";
 
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;

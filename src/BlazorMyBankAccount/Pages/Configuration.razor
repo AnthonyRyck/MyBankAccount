@@ -1,0 +1,25 @@
+﻿@page "/settings"
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Configuration</h3>
+
+
+<RadzenTabs>
+	<Tabs>
+		<RadzenTabsItem Text="Comptes">
+			<ConfigCompteComponent />
+		</RadzenTabsItem>
+
+		<RadzenTabsItem Text="Budgets">
+			<div>A faire.</div>
+		</RadzenTabsItem>
+
+		<RadzenTabsItem Text="Transactions">
+			<div>A faire.</div>
+		</RadzenTabsItem>
+	</Tabs>
+</RadzenTabs>
+
+@code {
+
+}
