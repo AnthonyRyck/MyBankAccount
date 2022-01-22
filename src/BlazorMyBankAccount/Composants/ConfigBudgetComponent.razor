@@ -1,0 +1,112 @@
+﻿@inject IBudgetConfig ViewModel
+
+<h3>Budget</h3>
+
+@if(@ViewModel.IsLoaded)
+{
+<div>
+	<div class="padding-10">
+		@if (!ViewModel.DialogIsOpenNewBudget)
+		{
+			<RadzenButton Text="Nouveau budget"
+						  Icon="add_circle"
+						  ButtonStyle="ButtonStyle.Secondary"
+						  Click="ViewModel.OpenNewBudget" />
+		}
+		else
+		{
+			<div class="col-xl-6">
+				<EditForm OnValidSubmit="@ViewModel.OnValidSubmit"
+						  Model="@ViewModel.BudgetValidation">
+					<RadzenCard>
+						@* Super IMPORTANT !!! *@
+						<DataAnnotationsValidator />
+
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.BudgetValidation.NomBudget)" />
+							</div>
+							<RadzenTextBox Placeholder="Nom..."
+										   @bind-Value="ViewModel.BudgetValidation.NomBudget"
+										   Style="width 300px" />
+						</div>
+
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.BudgetValidation.Description)" />
+							</div>
+							<RadzenTextBox Placeholder="Description..."
+										   @bind-Value="ViewModel.BudgetValidation.Description"
+										   Style="width 300px" />
+						</div>
+
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.BudgetValidation.CompteId)" />
+							</div>
+							<RadzenDropDown AllowClear="true" 
+											TValue="Compte" 
+											FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+											AllowFiltering="true" 
+											Class="w-100" 
+											Placeholder="Choisir un compte..." 
+											Data=@ViewModel.AllComptes
+											TextProperty="Nomcompte" 
+											Change=@(args => ViewModel.OnSelectCompte(args)) />
+						</div>
+					</RadzenCard>
+
+					<span class="margin-10px">
+						<button type="submit" class="padding-5">Ajouter</button>
+
+						<button type="reset"
+								class="padding-5"
+								@onclick="ViewModel.CloseNewBudget">
+							Annuler
+						</button>
+					</span>
+				</EditForm>
+			</div>
+		}
+	</div>
+</div>
+
+<div class="col-6">
+	<RadzenGrid AllowFiltering="true"
+				FilterCaseSensitivity="FilterCaseSensitivity.Default"
+				AllowPaging="true"
+				PageSize="10"
+				AllowSorting="true"
+				Data="@ViewModel.AllBudgets"
+				TItem="BudgetCompteView"
+				EmptyText="Aucun compte"
+				@ref="ViewModel.BudgetGrid">
+		<Columns>
+			<RadzenGridColumn TItem="BudgetCompteView"
+								Property="Budget.Nombudget"
+								Title="Nom"
+								Width="150px" />
+
+			<RadzenGridColumn TItem="BudgetCompteView"
+								Property="Budget.Description"
+								Title="Description" />
+
+			<RadzenGridColumn TItem="BudgetCompteView"
+								Property="Compte.Nomcompte"
+								Title="Compte Stockage" />
+		</Columns>
+	</RadzenGrid>
+</div>
+}
+else
+{
+    <div>Chargement des budgets en cours ...</div>
+}
+
+@code {
+   	protected override async Task OnInitializedAsync()
+	{
+		ViewModel.SetStateHasChanged(StateHasChanged);
+		await ViewModel.LoadAllBudgets();
+	}
+}
