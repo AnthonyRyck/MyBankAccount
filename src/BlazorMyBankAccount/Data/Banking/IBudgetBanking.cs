@@ -21,6 +21,12 @@
         Task<List<Compte>> GetAccounts();
 
         /// <summary>
+        /// Retourne tous les types de budgets
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Typebudget>> GetTypesBudget();
+
+        /// <summary>
         /// Ajoute un budget.
         /// </summary>
         /// <param name="budget">Un nouveau budget</param>
@@ -30,10 +36,12 @@
         /// <summary>
         /// Ajout un nouveau budget
         /// </summary>
-        /// <param name="accountName">Nom du compte</param>
+        /// <param name="budgetName">Nom du budget</param>
         /// <param name="description">Une description</param>
         /// <param name="compteId">Compte est stocke le budget</param>
+        /// <param name="typebudget">Type de budget</param>
+        /// <param name="montant">Montant pour dépense</param>
         /// <returns></returns>
-        Task<Budget> AddBudget(string budgetName, string description, Compte compteId);
+        Task<Budget> AddBudget(string budgetName, string description, Compte compteId, Typebudget typebudget, decimal? montant);
     }
 }

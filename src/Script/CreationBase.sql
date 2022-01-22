@@ -21,10 +21,18 @@ nomcompte VARCHAR(25) NOT NULL,
 description VARCHAR(50) NOT NULL,
 PRIMARY KEY(idcompte));
 
+CREATE TABLE typebudget
+(idtypebudget int NOT NULL AUTO_INCREMENT,
+nomtypebudget VARCHAR(25) NOT NULL,
+PRIMARY KEY(idtypebudget));
+
 CREATE TABLE budgets
 (idbudget int NOT NULL AUTO_INCREMENT,
 nombudget VARCHAR(25) NOT NULL,
 description VARCHAR(50) NOT NULL,
+typebudgetid int NOT NULL,
+montant DECIMAL(6,2) NULL,
+FOREIGN KEY(typebudgetid) REFERENCES typebudget(idtypebudget),
 PRIMARY KEY(idbudget));
 
 CREATE TABLE comptebudget
@@ -42,7 +50,7 @@ datetransaction DATETIME,
 typeid int NOT NULL,
 nomtransaction VARCHAR(25),
 isvalidate bit(1) NOT NULL,
-montant double NOT NULL,
+montant DECIMAL(6,2) NOT NULL,
 FOREIGN KEY(idcompte) REFERENCES comptes(idcompte),
 FOREIGN KEY(idannee) REFERENCES anneetraitement(annee),
 FOREIGN KEY(idmois) REFERENCES moistraitement(mois),

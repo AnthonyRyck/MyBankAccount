@@ -1,6 +1,4 @@
-﻿using BlazorMyBankAccount.Data.DataView;
-
-namespace BlazorMyBankAccount.ViewModels.Configuration
+﻿namespace BlazorMyBankAccount.ViewModels.Configuration
 {
     public interface IBudgetConfig
     {
@@ -8,6 +6,11 @@ namespace BlazorMyBankAccount.ViewModels.Configuration
 		/// Tous les Budgets
 		/// </summary>
 		List<BudgetCompteView> AllBudgets { get; set; }
+
+		/// <summary>
+		/// Tous les types de budget
+		/// </summary>
+		List<Typebudget> AllTypesBudget { get; set; }
 
 		/// <summary>
 		/// Tous les comptes
@@ -63,5 +66,9 @@ namespace BlazorMyBankAccount.ViewModels.Configuration
 
 
 		void OnSelectCompte(object compteSelected);
+
+		void OnSelectTypeBudget(object typeSelected);
+
+		void OnChangeMontant(decimal montant);
 	}
 }

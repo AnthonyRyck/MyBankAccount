@@ -16,15 +16,17 @@
             await context.SaveChangesAsync();
         }
 
-        /// <inheritdoc cref="IBudgetBanking.AddBudget(string, string, Compte)"/>
-        public async Task<Budget> AddBudget(string budgetName, string description, Compte compteId)
+        /// <inheritdoc cref="IBudgetBanking.AddBudget(string, string, Compte, Typebudget)"/>
+        public async Task<Budget> AddBudget(string budgetName, string description, Compte compteId, Typebudget typebudget, decimal? montant)
         {
             Budget budget = new Budget()
             {
                 Nombudget = budgetName,
                 Description = description,
+                Montant = montant
             };
             budget.Idcomptes.Add(compteId);
+            budget.Typebudget = typebudget;
 
             await context.Budgets.AddAsync(budget);
             await context.SaveChangesAsync();
@@ -41,24 +43,21 @@
         /// <inheritdoc cref="IBudgetBanking.GetBudgets"/>
         public async Task<List<Budget>> GetBudgets()
         {
-            //var test = context.Budgets.Join(context.Comptes,
-            //                    bud => bud.Idcomptes,
-            //                    cpt => cpt.Idcompte,
-            //                    (bud, cpt) => cpt)
-            //                .ToList();
-
-            //var testJoin = (from bud in context.Budgets
-            //                join cpt in context.Comptes
-            //                on bud.Idbudget equals cpt.Idbudgets.Contains())
-
-
-            return await context.Budgets.Include(cpt => cpt.Idcomptes).ToListAsync();
+            return await context.Budgets.Include(cpt => cpt.Idcomptes)
+                                        .Include(typ => typ.Typebudget)
+                                        .ToListAsync();
         }
 
         /// <inheritdoc cref="IBudgetBanking.GetAccounts"/>
         public async Task<List<Compte>> GetAccounts()
         {
             return await context.Comptes.ToListAsync();
+        }
+
+        /// <inheritdoc cref="IBudgetBanking.GetTypesBudget"/>
+        public async Task<List<Typebudget>> GetTypesBudget()
+        {
+            return await context.Typebudgets.ToListAsync();
         }
 
         #endregion

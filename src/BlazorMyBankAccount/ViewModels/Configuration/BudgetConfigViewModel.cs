@@ -1,11 +1,12 @@
-﻿using BlazorMyBankAccount.Data.DataView;
-
-namespace BlazorMyBankAccount.ViewModels.Configuration
+﻿namespace BlazorMyBankAccount.ViewModels.Configuration
 {
     public class BudgetConfigViewModel : BaseViewModel, IBudgetConfig
     {
         /// <inheritdoc cref="IBudgetConfig.AllBudgets"/>
         public List<BudgetCompteView> AllBudgets { get; set; }
+
+        /// <inheritdoc cref="IBudgetConfig.AllTypesBudget"/>
+        public List<Typebudget> AllTypesBudget { get; set; }
 
         /// <inheritdoc cref="IBudgetConfig.AllComptes"/>
         public List<Compte> AllComptes { get; set; }
@@ -47,6 +48,7 @@ namespace BlazorMyBankAccount.ViewModels.Configuration
         /// <inheritdoc cref="IBudgetConfig.LoadAllBudgets"/>
         public async Task LoadAllBudgets()
         {
+            AllTypesBudget = await dataAccess.GetTypesBudget();
             var budgets = await dataAccess.GetBudgets();
             AllComptes = await dataAccess.GetAccounts();
             IsLoaded = true;
@@ -67,7 +69,7 @@ namespace BlazorMyBankAccount.ViewModels.Configuration
             try
             {
                 // Ajout dans la base de donnée.
-                Budget newBudget = await dataAccess.AddBudget(BudgetValidation.NomBudget, BudgetValidation.Description, BudgetValidation.CompteId);
+                Budget newBudget = await dataAccess.AddBudget(BudgetValidation.NomBudget, BudgetValidation.Description, BudgetValidation.CompteId, BudgetValidation.TypeBudgetId, BudgetValidation.Montant);
 
                 AllBudgets.Add(newBudget.ToBudgetCompteView());
                 await BudgetGrid.Reload();
@@ -102,6 +104,17 @@ namespace BlazorMyBankAccount.ViewModels.Configuration
         public void OnSelectCompte(object compteSelected)
         {
             BudgetValidation.CompteId = (Compte)compteSelected;
+        }
+
+
+        public void OnSelectTypeBudget(object typeSelected)
+        {
+            BudgetValidation.TypeBudgetId = (Typebudget)typeSelected;
+        }
+
+        public void OnChangeMontant(decimal montant)
+        {
+            BudgetValidation.Montant = montant;
         }
     }
 

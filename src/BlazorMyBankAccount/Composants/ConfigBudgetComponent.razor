@@ -22,6 +22,7 @@
 						@* Super IMPORTANT !!! *@
 						<DataAnnotationsValidator />
 
+						@*Nom du budget*@
 						<div class="margin-5px">
 							<div>
 								<ValidationMessage For="@(() => ViewModel.BudgetValidation.NomBudget)" />
@@ -31,6 +32,7 @@
 										   Style="width 300px" />
 						</div>
 
+						@*Description*@
 						<div class="margin-5px">
 							<div>
 								<ValidationMessage For="@(() => ViewModel.BudgetValidation.Description)" />
@@ -40,20 +42,44 @@
 										   Style="width 300px" />
 						</div>
 
+						@*Choix du compte*@
 						<div class="margin-5px">
 							<div>
 								<ValidationMessage For="@(() => ViewModel.BudgetValidation.CompteId)" />
 							</div>
-							<RadzenDropDown AllowClear="true" 
-											TValue="Compte" 
-											FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
-											AllowFiltering="true" 
+							<RadzenDropDown TValue="Compte" 
 											Class="w-100" 
 											Placeholder="Choisir un compte..." 
 											Data=@ViewModel.AllComptes
 											TextProperty="Nomcompte" 
 											Change=@(args => ViewModel.OnSelectCompte(args)) />
 						</div>
+
+						@*Choix du type de budget*@
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.BudgetValidation.TypeBudgetId)" />
+							</div>
+							<RadzenDropDown TValue="Typebudget" 
+											Class="w-100" 
+											Placeholder="Choisir un type de budget..." 
+											Data=@ViewModel.AllTypesBudget
+											TextProperty="Nomtypebudget" 
+											Change=@(args => ViewModel.OnSelectTypeBudget(args)) />
+						</div>
+
+						@*Si une prévision de dépense, mettre le montant*@
+						@if(ViewModel.BudgetValidation.TypeBudgetId != null
+							&& ViewModel.BudgetValidation.TypeBudgetId.Nomtypebudget == "Prévision dépense")
+						{
+						<div class="margin-5px">
+							<RadzenNumeric TValue="decimal" 
+											Format="c" 
+											Placeholder="Montant" 
+											Change="@(args => ViewModel.OnChangeMontant(args))" />
+						</div>
+						}
+						
 					</RadzenCard>
 
 					<span class="margin-10px">
@@ -84,16 +110,24 @@
 		<Columns>
 			<RadzenGridColumn TItem="BudgetCompteView"
 								Property="Budget.Nombudget"
-								Title="Nom"
-								Width="150px" />
+								Title="Nom" />
+
+			<RadzenGridColumn TItem="BudgetCompteView"
+								Property="Budget.Typebudget.Nomtypebudget"
+								Title="Type budget" />
 
 			<RadzenGridColumn TItem="BudgetCompteView"
 								Property="Budget.Description"
-								Title="Description" />
+								Title="Description"
+								Width="250px" />
 
 			<RadzenGridColumn TItem="BudgetCompteView"
 								Property="Compte.Nomcompte"
 								Title="Compte Stockage" />
+
+			<RadzenGridColumn TItem="BudgetCompteView"
+								Property="Budget.Montant"
+								Title="Montant" />
 		</Columns>
 	</RadzenGrid>
 </div>

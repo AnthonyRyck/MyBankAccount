@@ -1,7 +1,6 @@
 using BlazorMyBankAccount.Areas.Identity;
 using BlazorMyBankAccount.Data;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -51,6 +50,7 @@ builder.Services.AddScoped<IBudgetBanking, BudgetBanking>();
 builder.Services.AddScoped<IUsersViewModel, UsersViewModel>();
 builder.Services.AddScoped<ICompteConfig, CompteConfigViewModel>();
 builder.Services.AddScoped<IBudgetConfig, BudgetConfigViewModel>();
+builder.Services.AddScoped<ISuiviCompte, SuiviCompteViewModel>();
 
 var app = builder.Build();
 

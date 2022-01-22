@@ -1,0 +1,21 @@
+﻿@page "/suivi"
+@inject ISuiviCompte ViewModel
+
+<h3>Suivi des Comptes</h3>
+
+@*<RadzenDropDown AllowClear="true" 
+				TValue="Compte" 
+				FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+				AllowFiltering="true" 
+				Class="w-100" 
+				Placeholder="Choisir un compte..." 
+				Data=@ViewModel.AllComptes
+				TextProperty="Nomcompte" 
+				Change=@(args => ViewModel.OnSelectCompte(args)) />*@
+
+
+
+
+@code {
+
+}

@@ -13,5 +13,12 @@ namespace BlazorMyBankAccount.ValidationModels
 
         [Required(ErrorMessage = "Il faut sélectionner un compte pour le stockage")]
         public Compte CompteId { get; set; }
+
+        [Required(ErrorMessage = "Il faut sélectionner un type de budget")]
+        public Typebudget TypeBudgetId { get; set; }
+
+        [Precision(6, 2)]
+        public decimal? Montant { get; set; }
+
     }
 }

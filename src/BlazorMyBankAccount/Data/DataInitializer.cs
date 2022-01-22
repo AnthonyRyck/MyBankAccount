@@ -49,6 +49,7 @@ namespace BlazorMyBankAccount.Data
         {
             await InitTransaction(dbContext);
             await InitDateTraitement(dbContext);
+            await InitTypeBudget(dbContext);
 
             await dbContext.SaveChangesAsync();
         }
@@ -69,6 +70,11 @@ namespace BlazorMyBankAccount.Data
             typePrelevement.Nom = "Prélèvement";
             typePrelevement.Description = "Prélèvement bancaire";
             await dbContext.AddAsync(typePrelevement);
+
+            Typestransaction typeCheque = new Typestransaction();
+            typeCheque.Nom = "Chèque";
+            typeCheque.Description = "Paiement par chèque";
+            await dbContext.AddAsync(typeCheque);
         }
 
         private async static Task InitDateTraitement(bankingContext dbContext)
@@ -84,6 +90,18 @@ namespace BlazorMyBankAccount.Data
                 moistraitement.Mois = mois;
                 await dbContext.AddAsync(moistraitement);
             }
+        }
+
+        private async static Task InitTypeBudget(bankingContext dbContext)
+        {
+            Typebudget typeEpargne = new Typebudget();
+            typeEpargne.Nomtypebudget = "Epargne";
+            await dbContext.AddAsync(typeEpargne);
+
+            Typebudget typePrevDepense = new Typebudget();
+            typePrevDepense.Nomtypebudget = "Prévision dépense";
+            await dbContext.AddAsync(typePrevDepense);
+
         }
     }
 }

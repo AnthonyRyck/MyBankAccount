@@ -10,7 +10,6 @@ namespace BankDataAccess
         public bankingContext(DbContextOptions<bankingContext> options)
             : base(options)
         {
-            
         }
 
         public virtual DbSet<Anneetraitement> Anneetraitements { get; set; } = null!;
@@ -19,6 +18,7 @@ namespace BankDataAccess
         public virtual DbSet<Moistraitement> Moistraitements { get; set; } = null!;
         public virtual DbSet<Suivicompte> Suivicomptes { get; set; } = null!;
         public virtual DbSet<Transactionobligatoire> Transactionobligatoires { get; set; } = null!;
+        public virtual DbSet<Typebudget> Typebudgets { get; set; } = null!;
         public virtual DbSet<Typestransaction> Typestransactions { get; set; } = null!;
 
 
@@ -46,15 +46,29 @@ namespace BankDataAccess
 
                 entity.ToTable("budgets");
 
+                entity.HasIndex(e => e.Typebudgetid, "typebudgetid");
+
                 entity.Property(e => e.Idbudget).HasColumnName("idbudget");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(50)
                     .HasColumnName("description");
 
+                entity.Property(e => e.Montant)
+                    .HasPrecision(6, 2)
+                    .HasColumnName("montant");
+
                 entity.Property(e => e.Nombudget)
                     .HasMaxLength(25)
                     .HasColumnName("nombudget");
+
+                entity.Property(e => e.Typebudgetid).HasColumnName("typebudgetid");
+
+                entity.HasOne(d => d.Typebudget)
+                    .WithMany(p => p.Budgets)
+                    .HasForeignKey(d => d.Typebudgetid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("budgets_ibfk_1");
             });
 
             modelBuilder.Entity<Compte>(entity =>
@@ -134,7 +148,9 @@ namespace BankDataAccess
                     .HasColumnType("bit(1)")
                     .HasColumnName("isvalidate");
 
-                entity.Property(e => e.Montant).HasColumnName("montant");
+                entity.Property(e => e.Montant)
+                    .HasPrecision(6, 2)
+                    .HasColumnName("montant");
 
                 entity.Property(e => e.Nomtransaction)
                     .HasMaxLength(25)
@@ -203,6 +219,20 @@ namespace BankDataAccess
                     .HasForeignKey(d => d.Typeid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("transactionobligatoire_ibfk_2");
+            });
+
+            modelBuilder.Entity<Typebudget>(entity =>
+            {
+                entity.HasKey(e => e.Idtypebudget)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("typebudget");
+
+                entity.Property(e => e.Idtypebudget).HasColumnName("idtypebudget");
+
+                entity.Property(e => e.Nomtypebudget)
+                    .HasMaxLength(25)
+                    .HasColumnName("nomtypebudget");
             });
 
             modelBuilder.Entity<Typestransaction>(entity =>

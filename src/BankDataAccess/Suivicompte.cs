@@ -11,8 +11,8 @@ namespace BankDataAccess
         public DateTime? Datetransaction { get; set; }
         public int Typeid { get; set; }
         public string? Nomtransaction { get; set; }
-        public ulong Isvalidate { get; set; }
-        public double Montant { get; set; }
+        public bool Isvalidate { get; set; }
+        public decimal Montant { get; set; }
 
         public virtual Anneetraitement IdanneeNavigation { get; set; } = null!;
         public virtual Compte IdcompteNavigation { get; set; } = null!;
