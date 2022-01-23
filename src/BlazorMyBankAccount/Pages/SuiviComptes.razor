@@ -1,21 +1,174 @@
 ﻿@page "/suivi"
-@inject ISuiviCompte ViewModel
+@attribute [Authorize(Roles = "Admin, Member")]
+@inject ISuiviCompteViewModel ViewModel
 
-<h3>Suivi des Comptes</h3>
+<h2>Suivi des Comptes</h2>
 
-@*<RadzenDropDown AllowClear="true" 
-				TValue="Compte" 
-				FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
-				AllowFiltering="true" 
-				Class="w-100" 
-				Placeholder="Choisir un compte..." 
-				Data=@ViewModel.AllComptes
-				TextProperty="Nomcompte" 
-				Change=@(args => ViewModel.OnSelectCompte(args)) />*@
+<div class="w-100">
+	<RadzenDropDown AllowClear="true" 
+					TValue="Compte" 
+					FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+					AllowFiltering="true" 
+					Placeholder="Choisir un compte..." 
+					Data=@ViewModel.Comptes
+					TextProperty="Nomcompte" 
+					Change=@(args => ViewModel.OnSelectCompte(args))
+					Disabled=@ViewModel.IsLoading />
+</div>
 
+@if(ViewModel.IsLoading)
+{
+	<div>Chargement des données.</div>
+}
+else
+{
+	@*Pour l'ajout d'une nouvelle saisie.*@
+	<div class="padding-10">
+		<EditForm OnValidSubmit="@ViewModel.OnValidSubmit"
+						  Model="@ViewModel.TransacValidation">
+		
+		<RadzenCard>
+		@* Super IMPORTANT !!! *@
+		<DataAnnotationsValidator />
 
+		<div class="row">
+		
+		<div class="margin-5px w-50 col">
+			<div>
+			Date de la transaction
+			</div>
 
+			<RadzenDatePicker @bind-Value="ViewModel.TransacValidation.DateTransaction"
+							DateFormat="d" />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Nom transaction
+			</div>
+			<div>
+				<ValidationMessage For="@(() => ViewModel.TransacValidation.NomTransaction)" />
+			</div>
+			<RadzenTextBox Placeholder="Nom..."
+						@bind-Value="ViewModel.TransacValidation.NomTransaction" />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Montant de la transaction
+			</div>
+
+			<div>
+				<ValidationMessage For="@(() => ViewModel.TransacValidation.Montant)" />
+			</div>
+			<RadzenNumeric TValue="decimal" 
+							Format="c" 
+							@bind-Value="ViewModel.TransacValidation.Montant"
+							Placeholder="Montant" 
+							 />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Type de transaction
+			</div>
+
+			<div>
+				<ValidationMessage For="@(() => ViewModel.TransacValidation.TypeTransac)" />
+			</div>
+			<RadzenDropDown AllowClear="true" 
+						TValue="Typestransaction" 
+						Placeholder="Choisir un type..." 
+						Data=@ViewModel.TypesTransaction
+						TextProperty="Nom"
+						@bind-Value="ViewModel.TransacValidation.TypeTransac"
+						Disabled=@ViewModel.IsLoading />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Transaction validé ?
+			</div>
+
+			<RadzenCheckBox @bind-Value="ViewModel.TransacValidation.IsValide" 
+							Name="CheckBox1" 
+							TValue="bool" />
+		</div>
+
+			<div class="margin-10px col">
+				<button type="submit" class="padding-5">Ajouter</button>
+
+				<button type="reset"
+						class="padding-5"
+						@onclick="ViewModel.AnnulerSaisie">
+					Annuler
+				</button>
+			</div>
+
+			</div>
+			</RadzenCard>
+		</EditForm>
+	</div>
+
+<div>
+	<RadzenGrid AllowFiltering="true"
+				FilterCaseSensitivity="FilterCaseSensitivity.Default"
+				AllowPaging="true"
+				PageSize="30"
+				AllowSorting="true"
+				Data="@ViewModel.SuiviDuCompte"
+				TItem="Suivicompte"
+				EmptyText="Aucune transaction"
+				@ref="ViewModel.SaisieGrid">
+		<Columns>
+			@*Date*@
+			<RadzenGridColumn TItem="Suivicompte"
+							  Property="Datetransaction"
+							  Title="Date"
+							  Filterable="false"
+							  Format="date-time"
+							  Width="150px">
+				<Template Context="transact">
+					@String.Format("{0:d}", transact.Datetransaction)
+				</Template>
+			</RadzenGridColumn>
+
+			@*Montant*@
+			<RadzenGridColumn TItem="Suivicompte"
+							  Property="Montant"
+							  Title="Montant"
+							  Width="150px" />
+			
+			@*Nom de la transaction*@
+			<RadzenGridColumn TItem="Suivicompte"
+							  Property="Nomtransaction"
+							  Title="Nom"
+							  Width="150px" />
+			@*Type*@
+			<RadzenGridColumn TItem="Suivicompte"
+							  Property="Type.Nom"
+							  Title="Type"
+							  Width="150px">
+			</RadzenGridColumn>
+
+			<RadzenGridColumn TItem="Suivicompte"
+							  Property="Isvalidate"
+							  Title="Est validé ?">
+				<Template Context="suivi">
+					<RadzenCheckBox Value="suivi.Isvalidate"
+									Name="CheckBox1" 
+									TValue="bool" />
+				</Template>
+			</RadzenGridColumn>
+		</Columns>
+	</RadzenGrid>
+</div>
+
+}
 
 @code {
-
+	protected async override Task OnInitializedAsync()
+	{
+		await ViewModel.InitData();
+	}
 }

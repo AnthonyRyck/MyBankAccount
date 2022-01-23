@@ -49,6 +49,7 @@ namespace BlazorMyBankAccount.Data
         {
             await InitTransaction(dbContext);
             await InitDateTraitement(dbContext);
+            await InitCompte(dbContext);
             await InitTypeBudget(dbContext);
 
             await dbContext.SaveChangesAsync();
@@ -56,6 +57,11 @@ namespace BlazorMyBankAccount.Data
 
         private async static Task InitTransaction(bankingContext dbContext)
         {
+            Typestransaction typePrevision = new Typestransaction();
+            typePrevision.Nom = "Prévision";
+            typePrevision.Description = "Prévision";
+            await dbContext.AddAsync(typePrevision);
+
             Typestransaction typeVirement = new Typestransaction();
             typeVirement.Nom = "Virement";
             typeVirement.Description = "Virement bancaire";
@@ -92,6 +98,14 @@ namespace BlazorMyBankAccount.Data
             }
         }
 
+        private async static Task InitCompte(bankingContext dbContext)
+        {
+            Compte compteCourant = new Compte();
+            compteCourant.Nomcompte = "Compte courant/dépot";
+            compteCourant.Description = "Compte de dépot";
+            await dbContext.AddAsync(compteCourant);
+        }
+
         private async static Task InitTypeBudget(bankingContext dbContext)
         {
             Typebudget typeEpargne = new Typebudget();
@@ -101,7 +115,6 @@ namespace BlazorMyBankAccount.Data
             Typebudget typePrevDepense = new Typebudget();
             typePrevDepense.Nomtypebudget = "Prévision dépense";
             await dbContext.AddAsync(typePrevDepense);
-
         }
     }
 }

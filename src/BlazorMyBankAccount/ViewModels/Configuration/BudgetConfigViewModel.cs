@@ -99,19 +99,19 @@
             StateChange = stateHasChange;
         }
 
-
-
+        /// <inheritdoc cref="IBudgetConfig.OnSelectCompte(object)"/>
         public void OnSelectCompte(object compteSelected)
         {
             BudgetValidation.CompteId = (Compte)compteSelected;
         }
 
-
+        /// <inheritdoc cref="IBudgetConfig.OnSelectTypeBudget(object)"/>
         public void OnSelectTypeBudget(object typeSelected)
         {
             BudgetValidation.TypeBudgetId = (Typebudget)typeSelected;
         }
 
+        /// <inheritdoc cref="IBudgetConfig.OnChangeMontant(decimal)"/>
         public void OnChangeMontant(decimal montant)
         {
             BudgetValidation.Montant = montant;

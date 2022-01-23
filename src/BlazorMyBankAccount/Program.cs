@@ -46,11 +46,12 @@ builder.Services.AddScoped<ContextMenuService>();
 // Services pour l'app
 builder.Services.AddScoped<ICompteBanking, CompteBanking>();
 builder.Services.AddScoped<IBudgetBanking, BudgetBanking>();
+builder.Services.AddScoped<ISuiviCompteData, SuiviCompteData>();
 
 builder.Services.AddScoped<IUsersViewModel, UsersViewModel>();
 builder.Services.AddScoped<ICompteConfig, CompteConfigViewModel>();
 builder.Services.AddScoped<IBudgetConfig, BudgetConfigViewModel>();
-builder.Services.AddScoped<ISuiviCompte, SuiviCompteViewModel>();
+builder.Services.AddScoped<ISuiviCompteViewModel, SuiviCompteViewModel>();
 
 var app = builder.Build();
 
