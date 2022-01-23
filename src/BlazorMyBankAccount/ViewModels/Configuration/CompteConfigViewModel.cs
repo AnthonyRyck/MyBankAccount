@@ -66,8 +66,7 @@ namespace BlazorMyBankAccount.ViewModels.Configuration
             }
 			catch (Exception ex)
 			{
-				Log.Error(ex, "CompteConfigViewModel - OnValidSubmit");
-                NotificationError("Compte non créé");
+                ReportError(ex, "CompteConfigViewModel - OnValidSubmit", "Compte non créé");
             }
 
             CloseNewAccount();

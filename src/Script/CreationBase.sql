@@ -61,7 +61,7 @@ CREATE TABLE transactionobligatoire
 (idtransac int NOT NULL AUTO_INCREMENT,
 idcompte int NOT NULL,
 nomtransaction VARCHAR(25) NOT NULL,
-montant double NOT NULL,
+montant DECIMAL(6,2) NOT NULL,
 typeid int NOT NULL,
 jour int NOT NULL,
 FOREIGN KEY(idcompte) REFERENCES comptes(idcompte),

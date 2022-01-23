@@ -44,5 +44,10 @@
             NotifSvc.Notify(messNotif);
         }
 
+        protected void ReportError(Exception ex, string messageLog, string messageNotif)
+        {
+            Log.Error(ex, messageLog);
+            NotificationError(messageNotif);
+        }
     }
 }

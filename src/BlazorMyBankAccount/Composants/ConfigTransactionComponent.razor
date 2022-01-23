@@ -1,0 +1,146 @@
+﻿@inject IConfigTransaction ViewModel
+
+<h2>Transactions répétées</h2>
+
+@if(@ViewModel.IsLoaded)
+{
+<div>
+	<div class="padding-10">
+		@if (!ViewModel.DialogIsOpen)
+		{
+			<RadzenButton Text="Nouvelle transaction"
+						  Icon="add_circle"
+						  ButtonStyle="ButtonStyle.Secondary"
+						  Click="ViewModel.OpenNewAccount" />
+		}
+		else
+		{
+			<div class="col-xl-6">
+				<EditForm OnValidSubmit="@ViewModel.OnValidSubmit"
+						  Model="@ViewModel.ModelValidation">
+					<RadzenCard>
+						@* Super IMPORTANT !!! *@
+						<DataAnnotationsValidator />
+
+						@*Indication du nom*@
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ModelValidation.NomTransaction)" />
+							</div>
+							<RadzenTextBox Placeholder="Nom..."
+										   @bind-Value="ViewModel.ModelValidation.NomTransaction"
+										   Style="width 300px" />
+						</div>
+
+						@*Indiquer le montant*@
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ModelValidation.Montant)" />
+							</div>
+							<RadzenNumeric TValue="decimal" 
+											Format="c" 
+											Placeholder="Montant" 
+											@bind-Value="ViewModel.ModelValidation.Montant" />
+						</div>
+
+						@*Indiquer le jour*@
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ModelValidation.Jour)" />
+							</div>
+							<RadzenNumeric TValue="int" 
+											Min="1" 
+											Max="31" 
+											@bind-Value="ViewModel.ModelValidation.Jour" />
+						</div>
+
+						@*Choix du compte*@
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ModelValidation.CompteSelected)" />
+							</div>
+							<RadzenDropDown TValue="Compte"
+											Class="w-100" 
+											Placeholder="Choisir un compte..." 
+											Data=@ViewModel.AllComptes
+											TextProperty="Nomcompte" 
+											@bind-Value="ViewModel.ModelValidation.CompteSelected" />
+						</div>
+
+						@*Choix du type de transaction*@
+						<div class="margin-5px">
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ModelValidation.Typestransaction)" />
+							</div>
+							<RadzenDropDown TValue="Typestransaction" 
+											Class="w-100" 
+											Placeholder="Choisir un type..." 
+											Data=@ViewModel.AllTypes
+											TextProperty="Nom" 
+											@bind-Value="ViewModel.ModelValidation.Typestransaction" />
+						</div>
+
+					</RadzenCard>
+
+					<span class="margin-10px">
+						<button type="submit" class="padding-5">Ajouter</button>
+
+						<button type="reset"
+								class="padding-5"
+								@onclick="ViewModel.CloseNewAccount">
+							Annuler
+						</button>
+					</span>
+				</EditForm>
+			</div>
+		}
+	</div>
+</div>
+
+<div class="col-6">
+	<RadzenGrid AllowFiltering="true"
+				FilterCaseSensitivity="FilterCaseSensitivity.Default"
+				AllowPaging="true"
+				PageSize="10"
+				AllowSorting="true"
+				Data="@ViewModel.AllTransactions"
+				TItem="Transactionobligatoire"
+				EmptyText="Aucune transaction"
+				@ref="ViewModel.TransacObligatoireGrid">
+		<Columns>
+			<RadzenGridColumn TItem="Transactionobligatoire"
+								Property="Nomtransaction"
+								Title="Nom"
+								Width="150px" />
+
+			<RadzenGridColumn TItem="Transactionobligatoire"
+								Property="Montant"
+								Title="Montant" />
+
+			<RadzenGridColumn TItem="Transactionobligatoire"
+								Property="Jour"
+								Title="Jour" />
+
+			<RadzenGridColumn TItem="Transactionobligatoire"
+								Property="IdcompteNavigation.Nomcompte"
+								Title="Compte" />
+
+			<RadzenGridColumn TItem="Transactionobligatoire"
+								Property="Type.Nom"
+								Title="Type" />
+
+		</Columns>
+	</RadzenGrid>
+</div>
+}
+else
+{
+    <div>Chargement des transactions en cours ...</div>
+}
+
+@code {
+   	protected override async Task OnInitializedAsync()
+	{
+		await ViewModel.LoadAllTransactions();
+	}
+}

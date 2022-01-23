@@ -44,14 +44,17 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
 // Services pour l'app
+// Acces data
 builder.Services.AddScoped<ICompteBanking, CompteBanking>();
 builder.Services.AddScoped<IBudgetBanking, BudgetBanking>();
 builder.Services.AddScoped<ISuiviCompteData, SuiviCompteData>();
-
+builder.Services.AddScoped<ITransactionData, TransactionData>();
+// pour les composants/pages
 builder.Services.AddScoped<IUsersViewModel, UsersViewModel>();
 builder.Services.AddScoped<ICompteConfig, CompteConfigViewModel>();
 builder.Services.AddScoped<IBudgetConfig, BudgetConfigViewModel>();
 builder.Services.AddScoped<ISuiviCompteViewModel, SuiviCompteViewModel>();
+builder.Services.AddScoped <IConfigTransaction, ConfigTransactionViewModel>();
 
 var app = builder.Build();
 

@@ -200,7 +200,9 @@ namespace BankDataAccess
 
                 entity.Property(e => e.Jour).HasColumnName("jour");
 
-                entity.Property(e => e.Montant).HasColumnName("montant");
+                entity.Property(e => e.Montant)
+                    .HasPrecision(6, 2)
+                    .HasColumnName("montant");
 
                 entity.Property(e => e.Nomtransaction)
                     .HasMaxLength(25)
