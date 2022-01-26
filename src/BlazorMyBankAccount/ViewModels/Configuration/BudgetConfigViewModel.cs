@@ -57,7 +57,7 @@
             {
                 BudgetCompteView view = new BudgetCompteView();
                 view.Budget = item;
-                view.Compte = item.Idcomptes.FirstOrDefault();
+                view.Compte = item.IdcompteNavigation;
 
                 AllBudgets.Add(view);
             }

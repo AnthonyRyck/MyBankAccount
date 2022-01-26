@@ -115,58 +115,70 @@ else
 		</EditForm>
 	</div>
 
-<div>
-	<RadzenGrid AllowFiltering="true"
-				FilterCaseSensitivity="FilterCaseSensitivity.Default"
-				AllowPaging="true"
-				PageSize="30"
-				AllowSorting="true"
-				Data="@ViewModel.SuiviDuCompte"
-				TItem="Suivicompte"
-				EmptyText="Aucune transaction"
-				@ref="ViewModel.SaisieGrid">
-		<Columns>
-			@*Date*@
-			<RadzenGridColumn TItem="Suivicompte"
-							  Property="Datetransaction"
-							  Title="Date"
-							  Filterable="false"
-							  Format="date-time"
-							  Width="150px">
-				<Template Context="transact">
-					@String.Format("{0:d}", transact.Datetransaction)
-				</Template>
-			</RadzenGridColumn>
+<div class="padding-5">
 
-			@*Montant*@
-			<RadzenGridColumn TItem="Suivicompte"
-							  Property="Montant"
-							  Title="Montant"
-							  Width="150px" />
+	<RadzenTabs TabPosition="TabPosition.Top">
+		<Tabs>
+			<RadzenTabsItem Text="Compte">
+				<RadzenGrid AllowFiltering="true"
+							FilterCaseSensitivity="FilterCaseSensitivity.Default"
+							AllowPaging="true"
+							PageSize="30"
+							AllowSorting="true"
+							Data="@ViewModel.SuiviDuCompte"
+							TItem="Suivicompte"
+							EmptyText="Aucune transaction"
+							@ref="ViewModel.SaisieGrid">
+					<Columns>
+						@*Date*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Datetransaction"
+										  Title="Date"
+										  Filterable="false"
+										  Format="date-time">
+							<Template Context="transact">
+								@String.Format("{0:d}", transact.Datetransaction)
+							</Template>
+						</RadzenGridColumn>
+
+						@*Montant*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Montant"
+										  Title="Montant" />
 			
-			@*Nom de la transaction*@
-			<RadzenGridColumn TItem="Suivicompte"
-							  Property="Nomtransaction"
-							  Title="Nom"
-							  Width="150px" />
-			@*Type*@
-			<RadzenGridColumn TItem="Suivicompte"
-							  Property="Type.Nom"
-							  Title="Type"
-							  Width="150px">
-			</RadzenGridColumn>
+						@*Nom de la transaction*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Nomtransaction"
+										  Title="Nom" />
+						@*Type*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Type.Nom"
+										  Title="Type">
+						</RadzenGridColumn>
 
-			<RadzenGridColumn TItem="Suivicompte"
-							  Property="Isvalidate"
-							  Title="Est validé ?">
-				<Template Context="suivi">
-					<RadzenCheckBox Value="suivi.Isvalidate"
-									Name="CheckBox1" 
-									TValue="bool" />
-				</Template>
-			</RadzenGridColumn>
-		</Columns>
-	</RadzenGrid>
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Isvalidate"
+										  Title="Est validé ?"
+											Width="70px">
+							<Template Context="suivi">
+								<RadzenCheckBox Value="suivi.Isvalidate"
+												Name="CheckBox1" 
+												TValue="bool" />
+							</Template>
+						</RadzenGridColumn>
+					</Columns>
+				</RadzenGrid>
+			</RadzenTabsItem>
+	
+			@foreach(Budget budget in ViewModel.Budgets)
+			{
+			<RadzenTabsItem Text="@budget.Nombudget">
+				<div>Pour tester @budget.Description</div>
+			</RadzenTabsItem>
+			}
+		</Tabs>
+	</RadzenTabs>
+		
 </div>
 
 }

@@ -26,6 +26,8 @@
 
         public bool HasConfig { get; private set; }
 
+        public IEnumerable<Budget> Budgets { get; private set; }
+
 
         public RadzenGrid<Suivicompte> SaisieGrid { get; set; }
         public Compte CompteSelected { get; set; }
@@ -39,17 +41,19 @@
             IsLoading = true;
             TypesTransaction = await dataContext.GetTypesTransaction();
             Comptes = await dataContext.GetComptes();
-
+            
             Configbank = await dataContext.GetConfig();
             if(Configbank != null)
             {
                 CompteSelected = Configbank.IdcomptedefaultNavigation;
                 SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
+                Budgets = await dataContext.GetBudgets(CompteSelected.Idcompte);
                 HasConfig = true;
             }
             else
             {
                 HasConfig = false;
+                Budgets = new List<Budget>();
             }
             
             IsLoading = false;
@@ -63,6 +67,8 @@
             CompteSelected = compteSelected;
 
             SuiviDuCompte = await dataContext.GetSuivicomptes(compteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
+            Budgets = await dataContext.GetBudgets(CompteSelected.Idcompte);
+
             IsLoading = false;
         }
 
@@ -87,15 +93,12 @@
                 SuiviDuCompte.Add(nouvelleEntre);
                 await SaisieGrid.Reload();
 
-                //string message = $"Nouveau compte : {compte.Nomcompte} ajouté";
-                NotificationSuccess("Ajout OK", "Pas planté");
-                //Log.Information("COMPTE - " + message);
+                NotificationSuccess("Ajout OK", "Ajout de l'opération");
                 TransacValidation = new TransactionValidation();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "SuiviCompteViewModel - OnValidSubmit");
-                NotificationError("Saisie non créée");
+                ReportError(ex, "SuiviCompteViewModel - OnValidSubmit", "Saisie non créée");
             }
         }
 

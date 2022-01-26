@@ -25,7 +25,7 @@
                 Description = description,
                 Montant = montant
             };
-            budget.Idcomptes.Add(compteId);
+            budget.Idcompte = compteId.Idcompte;
             budget.Typebudget = typebudget;
 
             await context.Budgets.AddAsync(budget);
@@ -43,7 +43,7 @@
         /// <inheritdoc cref="IBudgetBanking.GetBudgets"/>
         public async Task<List<Budget>> GetBudgets()
         {
-            return await context.Budgets.Include(cpt => cpt.Idcomptes)
+            return await context.Budgets.Include(cpt => cpt.IdcompteNavigation)
                                         .Include(typ => typ.Typebudget)
                                         .ToListAsync();
         }

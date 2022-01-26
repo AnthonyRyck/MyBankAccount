@@ -7,6 +7,7 @@ namespace BankDataAccess
 {
     public partial class bankingContext : DbContext
     {
+
         public bankingContext(DbContextOptions<bankingContext> options)
             : base(options)
         {
@@ -22,7 +23,7 @@ namespace BankDataAccess
         public virtual DbSet<Typebudget> Typebudgets { get; set; } = null!;
         public virtual DbSet<Typestransaction> Typestransactions { get; set; } = null!;
 
-
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
@@ -42,14 +43,21 @@ namespace BankDataAccess
 
             modelBuilder.Entity<Budget>(entity =>
             {
-                entity.HasKey(e => e.Idbudget)
-                    .HasName("PRIMARY");
+                entity.HasKey(e => new { e.Idbudget, e.Idcompte })
+                    .HasName("PRIMARY")
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
                 entity.ToTable("budgets");
 
+                entity.HasIndex(e => e.Idcompte, "idcompte");
+
                 entity.HasIndex(e => e.Typebudgetid, "typebudgetid");
 
-                entity.Property(e => e.Idbudget).HasColumnName("idbudget");
+                entity.Property(e => e.Idbudget)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("idbudget");
+
+                entity.Property(e => e.Idcompte).HasColumnName("idcompte");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(50)
@@ -64,6 +72,12 @@ namespace BankDataAccess
                     .HasColumnName("nombudget");
 
                 entity.Property(e => e.Typebudgetid).HasColumnName("typebudgetid");
+
+                entity.HasOne(d => d.IdcompteNavigation)
+                    .WithMany(p => p.Budgets)
+                    .HasForeignKey(d => d.Idcompte)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("budgets_ibfk_2");
 
                 entity.HasOne(d => d.Typebudget)
                     .WithMany(p => p.Budgets)
@@ -88,25 +102,6 @@ namespace BankDataAccess
                 entity.Property(e => e.Nomcompte)
                     .HasMaxLength(25)
                     .HasColumnName("nomcompte");
-
-                entity.HasMany(d => d.Idbudgets)
-                    .WithMany(p => p.Idcomptes)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "Comptebudget",
-                        l => l.HasOne<Budget>().WithMany().HasForeignKey("Idbudget").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("comptebudget_ibfk_2"),
-                        r => r.HasOne<Compte>().WithMany().HasForeignKey("Idcompte").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("comptebudget_ibfk_1"),
-                        j =>
-                        {
-                            j.HasKey("Idcompte", "Idbudget").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-                            j.ToTable("comptebudget");
-
-                            j.HasIndex(new[] { "Idbudget" }, "idbudget");
-
-                            j.IndexerProperty<int>("Idcompte").HasColumnName("idcompte");
-
-                            j.IndexerProperty<int>("Idbudget").HasColumnName("idbudget");
-                        });
             });
 
             modelBuilder.Entity<Configbank>(entity =>
@@ -205,11 +200,6 @@ namespace BankDataAccess
                     .HasForeignKey(d => d.Idannee)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("suivicompte_ibfk_2");
-
-                entity.HasOne(d => d.IdbudgetNavigation)
-                    .WithMany(p => p.Suivicomptes)
-                    .HasForeignKey(d => d.Idbudget)
-                    .HasConstraintName("suivicompte_ibfk_5");
 
                 entity.HasOne(d => d.IdcompteNavigation)
                     .WithMany(p => p.Suivicomptes)

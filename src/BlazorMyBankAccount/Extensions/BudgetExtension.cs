@@ -9,7 +9,7 @@
             return new BudgetCompteView()
             {
                 Budget = source,
-                Compte = source.Idcomptes.FirstOrDefault()
+                Compte = source.IdcompteNavigation
             };
         }
     }

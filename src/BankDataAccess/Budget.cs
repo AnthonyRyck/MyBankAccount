@@ -5,21 +5,14 @@ namespace BankDataAccess
 {
     public partial class Budget
     {
-        public Budget()
-        {
-            Suivicomptes = new HashSet<Suivicompte>();
-            Idcomptes = new HashSet<Compte>();
-        }
-
         public int Idbudget { get; set; }
         public string Nombudget { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public int Idcompte { get; set; }
         public int Typebudgetid { get; set; }
         public decimal? Montant { get; set; }
 
+        public virtual Compte IdcompteNavigation { get; set; } = null!;
         public virtual Typebudget Typebudget { get; set; } = null!;
-        public virtual ICollection<Suivicompte> Suivicomptes { get; set; }
-
-        public virtual ICollection<Compte> Idcomptes { get; set; }
     }
 }

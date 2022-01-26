@@ -30,17 +30,12 @@ CREATE TABLE budgets
 (idbudget int NOT NULL AUTO_INCREMENT,
 nombudget VARCHAR(25) NOT NULL,
 description VARCHAR(50) NOT NULL,
+idcompte int NOT NULL,
 typebudgetid int NOT NULL,
 montant DECIMAL(6,2) NULL,
 FOREIGN KEY(typebudgetid) REFERENCES typebudget(idtypebudget),
-PRIMARY KEY(idbudget));
-
-CREATE TABLE comptebudget
-(idcompte int NOT NULL,
-idbudget int NOT NULL,
 FOREIGN KEY(idcompte) REFERENCES comptes(idcompte),
-FOREIGN KEY(idbudget) REFERENCES budgets(idbudget),
-PRIMARY KEY(idcompte, idbudget));
+PRIMARY KEY(idbudget, idcompte));
 
 CREATE TABLE suivicompte
 (idcompte int NOT NULL,

@@ -13,6 +13,11 @@
         Compte CompteSelected { get; set; }
 
         /// <summary>
+        /// Liste de tous les budgets sur ce compte.
+        /// </summary>
+        IEnumerable<Budget> Budgets { get; }
+
+        /// <summary>
         /// Liste de toutes les transactions sur un compte
         /// </summary>
         List<Suivicompte> SuiviDuCompte{ get; }

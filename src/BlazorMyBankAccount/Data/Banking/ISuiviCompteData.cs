@@ -9,10 +9,10 @@
         Task<IEnumerable<Compte>> GetComptes();
 
         /// <summary>
-        /// Retourne le compte demandé.
+        /// Retourne les budgets sur le compte demandé.
         /// </summary>
         /// <returns></returns>
-        Task<Compte> GetCompte(int idCompte);
+        Task<IEnumerable<Budget>> GetBudgets(int idCompte);
 
         /// <summary>
         /// Retourne le suivi du compte donné.

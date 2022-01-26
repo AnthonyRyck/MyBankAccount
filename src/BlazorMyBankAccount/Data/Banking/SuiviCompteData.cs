@@ -13,10 +13,19 @@
             return await context.Comptes.ToListAsync();
         }
 
-        /// <inheritdoc cref="ISuiviCompteData.GetCompte(int)"/>
-        public async Task<Compte> GetCompte(int idCompte)
+        /// <inheritdoc cref="ISuiviCompteData.((int)"/>
+        public async Task<IEnumerable<Budget>> GetBudgets(int idCompte)
         {
-            return await context.Comptes.FirstOrDefaultAsync(x => x.Idcompte == idCompte);
+            //from bd in context.Budgets
+            //where bd.Idcomptes.FirstOrDefault(x => x.Idcompte == idCompte)
+            return new List<Budget>();
+            //await context.Budgets.Where(bud =>bud.)
+            //    ToListAsync();
+
+            //return context.Comptes.Where(x => x.Idcompte == idCompte)
+            //    .Include(bud => bud.Idbudgets)
+            //    .Select(x => x.Idbudgets).;
+            //    //.ToListAsync();
         }
 
 

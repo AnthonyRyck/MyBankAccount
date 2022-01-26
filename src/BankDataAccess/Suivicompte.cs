@@ -16,7 +16,6 @@ namespace BankDataAccess
         public int? Idbudget { get; set; }
 
         public virtual Anneetraitement IdanneeNavigation { get; set; } = null!;
-        public virtual Budget? IdbudgetNavigation { get; set; }
         public virtual Compte IdcompteNavigation { get; set; } = null!;
         public virtual Moistraitement IdmoisNavigation { get; set; } = null!;
         public virtual Typestransaction Type { get; set; } = null!;
