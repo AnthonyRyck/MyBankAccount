@@ -49,12 +49,15 @@ builder.Services.AddScoped<ICompteBanking, CompteBanking>();
 builder.Services.AddScoped<IBudgetBanking, BudgetBanking>();
 builder.Services.AddScoped<ISuiviCompteData, SuiviCompteData>();
 builder.Services.AddScoped<ITransactionData, TransactionData>();
+builder.Services.AddScoped<IConfigBanking, ConfigBanking>();
 // pour les composants/pages
+builder.Services.AddScoped<IHomePage, HomePageViewModel>();
 builder.Services.AddScoped<IUsersViewModel, UsersViewModel>();
 builder.Services.AddScoped<ICompteConfig, CompteConfigViewModel>();
 builder.Services.AddScoped<IBudgetConfig, BudgetConfigViewModel>();
 builder.Services.AddScoped<ISuiviCompteViewModel, SuiviCompteViewModel>();
-builder.Services.AddScoped <IConfigTransaction, ConfigTransactionViewModel>();
+builder.Services.AddScoped<IConfigTransaction, ConfigTransactionViewModel>();
+builder.Services.AddScoped<IAppConfig, AppConfigViewModel>();
 
 var app = builder.Build();
 

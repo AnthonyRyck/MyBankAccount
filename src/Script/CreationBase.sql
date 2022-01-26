@@ -51,10 +51,12 @@ typeid int NOT NULL,
 nomtransaction VARCHAR(25),
 isvalidate bit(1) NOT NULL,
 montant DECIMAL(6,2) NOT NULL,
+idbudget int,
 FOREIGN KEY(idcompte) REFERENCES comptes(idcompte),
 FOREIGN KEY(idannee) REFERENCES anneetraitement(annee),
 FOREIGN KEY(idmois) REFERENCES moistraitement(mois),
 FOREIGN KEY(typeid) REFERENCES typestransaction(idtype),
+FOREIGN KEY(idbudget) REFERENCES budgets(idbudget),
 PRIMARY KEY(idcompte, idannee, idmois));
 
 CREATE TABLE transactionobligatoire
@@ -67,3 +69,12 @@ jour int NOT NULL,
 FOREIGN KEY(idcompte) REFERENCES comptes(idcompte),
 FOREIGN KEY(typeid) REFERENCES typestransaction(idtype),
 PRIMARY KEY(idtransac));
+
+CREATE TABLE configbank
+(idcomptedefault int NOT NULL,
+annee int NOT NULL,
+mois int NOT NULL,
+FOREIGN KEY(idcomptedefault) REFERENCES comptes(idcompte),
+FOREIGN KEY(annee) REFERENCES anneetraitement(annee),
+FOREIGN KEY(mois) REFERENCES moistraitement(mois),
+PRIMARY KEY(idcomptedefault, annee, mois));

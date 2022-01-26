@@ -1,0 +1,113 @@
+﻿@inject IAppConfig ViewModel
+
+
+<h3>Configuration</h3>
+
+@if(ViewModel.IsLoaded)
+{
+<div>
+	<div class="padding-10">
+		@if (!ViewModel.DialogIsOpen)
+		{
+			<RadzenButton Text="Ajouter/Modifier la configuration"
+						  Icon="build"
+						  ButtonStyle="ButtonStyle.Secondary"
+						  Click="ViewModel.OpenConfig" />
+		}
+		else
+		{
+			<div class="col-xl-6">
+				<EditForm OnValidSubmit="@ViewModel.OnValidSubmit"
+						  Model="@ViewModel.ValidationModel">
+					<RadzenCard>
+						@* Super IMPORTANT !!! *@
+						<DataAnnotationsValidator />
+
+						@*Compte par default*@
+						<div class="margin-5px">
+							<div>Compte par défaut</div>
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ValidationModel.CompteParDefault)" />
+							</div>
+							<RadzenDropDown TValue="Compte"
+											Class="w-100" 
+											Placeholder="Choisir un compte..." 
+											Data=@ViewModel.Comptes
+											TextProperty="Nomcompte" 
+											@bind-Value="ViewModel.ValidationModel.CompteParDefault" />
+						</div>
+
+						@*Annee*@
+						<div class="margin-5px">
+							<div>Année de traitement</div>
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ValidationModel.Annee)" />
+							</div>
+							<RadzenNumeric TValue="int"
+											Min="2020" Max="2050"
+										   @bind-Value="ViewModel.ValidationModel.Annee" />
+						</div>
+
+						@*Mois*@
+						<div class="margin-5px">
+							<div>Mois de traitement</div>
+							<div>
+								<ValidationMessage For="@(() => ViewModel.ValidationModel.Mois)" />
+							</div>
+							<RadzenNumeric TValue="int"
+											Min="1" Max="12" 
+											@bind-Value="ViewModel.ValidationModel.Mois" />
+						</div>
+
+					<span class="margin-10px">
+						<button type="submit" class="padding-5">Ajouter/Modifier</button>
+
+						<button type="reset"
+								class="padding-5"
+								@onclick="ViewModel.OnCancel">
+							Annuler
+						</button>
+					</span>
+
+					</RadzenCard>
+				</EditForm>
+			</div>
+		}
+	</div>
+</div>
+
+<div>
+	@*Affichage de la configuration en cours*@
+	@if(ViewModel.LaConfiguration != null)
+	{
+		 <RadzenCard class="m-3">
+                <div class="d-flex flex-row">
+                    <div>
+                        <div>Compte par default :</div>
+                        <b>@ViewModel.LaConfiguration.IdcomptedefaultNavigation.Nomcompte</b>
+                        <div class="mt-3">Annee de traitement :</div>
+                        <b>@ViewModel.LaConfiguration.Annee</b>
+						<div class="mt-3">Mois de traitement :</div>
+                        <b>@ViewModel.GetMois()</b>
+                    </div>
+                </div>
+            </RadzenCard>
+	}
+	else
+	{
+		<div>Aucune configuration</div>
+	}
+	</div>
+}
+else
+{
+    <div>Chargement de la configuration...</div>
+}
+
+@code {
+   	protected override async Task OnInitializedAsync()
+	{
+		ViewModel.SetStateHasChanged(StateHasChanged);
+		await ViewModel.InitData();
+	}
+}

@@ -7,6 +7,7 @@ namespace BankDataAccess
     {
         public Budget()
         {
+            Suivicomptes = new HashSet<Suivicompte>();
             Idcomptes = new HashSet<Compte>();
         }
 
@@ -17,6 +18,7 @@ namespace BankDataAccess
         public decimal? Montant { get; set; }
 
         public virtual Typebudget Typebudget { get; set; } = null!;
+        public virtual ICollection<Suivicompte> Suivicomptes { get; set; }
 
         public virtual ICollection<Compte> Idcomptes { get; set; }
     }

@@ -1,7 +1,32 @@
 ﻿@page "/"
+@inject IHomePage ViewModel
 
 <PageTitle>Accueil</PageTitle>
 
-<h1>Hello, world!</h1>
+@if (ViewModel.IsLoaded)
+{
+    @if(ViewModel.HasConfig)
+    {
+        <h1>Résumé</h1>
+    
+    
+    }
+    else
+    {
+        <h1>Attention</h1>
+    
+        <div>Aucun compte par défaut configuré.</div>
+        <div>Connectez vous, et configurer un compte par défaut et le mois/année de traitement.</div>
+    }
+}
+else
+{
+    <div>Chargement du résumé en cours...</div>
+}
 
-Bienvenue sur votre nouvelle application.
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.InitData();
+    }
+}

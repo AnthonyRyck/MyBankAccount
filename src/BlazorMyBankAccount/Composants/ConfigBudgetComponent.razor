@@ -47,12 +47,8 @@
 							<div>
 								<ValidationMessage For="@(() => ViewModel.BudgetValidation.CompteId)" />
 							</div>
-							<RadzenDropDown TValue="Compte" 
-											Class="w-100" 
-											Placeholder="Choisir un compte..." 
-											Data=@ViewModel.AllComptes
-											TextProperty="Nomcompte" 
-											Change=@(args => ViewModel.OnSelectCompte(args)) />
+							<SelectCompte Comptes=@ViewModel.AllComptes 
+										OnChangeValue=@(args => ViewModel.OnSelectCompte(args)) />
 						</div>
 
 						@*Choix du type de budget*@
@@ -97,7 +93,7 @@
 	</div>
 </div>
 
-<div class="col-6">
+<div>
 	<RadzenGrid AllowFiltering="true"
 				FilterCaseSensitivity="FilterCaseSensitivity.Default"
 				AllowPaging="true"
@@ -118,8 +114,7 @@
 
 			<RadzenGridColumn TItem="BudgetCompteView"
 								Property="Budget.Description"
-								Title="Description"
-								Width="250px" />
+								Title="Description" />
 
 			<RadzenGridColumn TItem="BudgetCompteView"
 								Property="Compte.Nomcompte"

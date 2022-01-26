@@ -1,0 +1,14 @@
+﻿<RadzenDropDown TValue="Compte" 
+				Class="w-100" 
+				Placeholder="Choisir un compte..." 
+				Data=@Comptes
+				TextProperty="Nomcompte" 
+				Change=@OnChangeValue />
+@code {
+
+	[Parameter]
+	public IEnumerable<Compte> Comptes { get; set; }
+
+	[Parameter]
+	public EventCallback<Object> OnChangeValue { get; set; }
+}

@@ -15,6 +15,7 @@ namespace BankDataAccess
         public virtual DbSet<Anneetraitement> Anneetraitements { get; set; } = null!;
         public virtual DbSet<Budget> Budgets { get; set; } = null!;
         public virtual DbSet<Compte> Comptes { get; set; } = null!;
+        public virtual DbSet<Configbank> Configbanks { get; set; } = null!;
         public virtual DbSet<Moistraitement> Moistraitements { get; set; } = null!;
         public virtual DbSet<Suivicompte> Suivicomptes { get; set; } = null!;
         public virtual DbSet<Transactionobligatoire> Transactionobligatoires { get; set; } = null!;
@@ -108,6 +109,43 @@ namespace BankDataAccess
                         });
             });
 
+            modelBuilder.Entity<Configbank>(entity =>
+            {
+                entity.HasKey(e => new { e.Idcomptedefault, e.Annee, e.Mois })
+                    .HasName("PRIMARY")
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+
+                entity.ToTable("configbank");
+
+                entity.HasIndex(e => e.Annee, "annee");
+
+                entity.HasIndex(e => e.Mois, "mois");
+
+                entity.Property(e => e.Idcomptedefault).HasColumnName("idcomptedefault");
+
+                entity.Property(e => e.Annee).HasColumnName("annee");
+
+                entity.Property(e => e.Mois).HasColumnName("mois");
+
+                entity.HasOne(d => d.AnneeNavigation)
+                    .WithMany(p => p.Configbanks)
+                    .HasForeignKey(d => d.Annee)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("configbank_ibfk_2");
+
+                entity.HasOne(d => d.IdcomptedefaultNavigation)
+                    .WithMany(p => p.Configbanks)
+                    .HasForeignKey(d => d.Idcomptedefault)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("configbank_ibfk_1");
+
+                entity.HasOne(d => d.MoisNavigation)
+                    .WithMany(p => p.Configbanks)
+                    .HasForeignKey(d => d.Mois)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("configbank_ibfk_3");
+            });
+
             modelBuilder.Entity<Moistraitement>(entity =>
             {
                 entity.HasKey(e => e.Mois)
@@ -130,6 +168,8 @@ namespace BankDataAccess
 
                 entity.HasIndex(e => e.Idannee, "idannee");
 
+                entity.HasIndex(e => e.Idbudget, "idbudget");
+
                 entity.HasIndex(e => e.Idmois, "idmois");
 
                 entity.HasIndex(e => e.Typeid, "typeid");
@@ -143,6 +183,8 @@ namespace BankDataAccess
                 entity.Property(e => e.Datetransaction)
                     .HasColumnType("datetime")
                     .HasColumnName("datetransaction");
+
+                entity.Property(e => e.Idbudget).HasColumnName("idbudget");
 
                 entity.Property(e => e.Isvalidate)
                     .HasColumnType("bit(1)")
@@ -163,6 +205,11 @@ namespace BankDataAccess
                     .HasForeignKey(d => d.Idannee)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("suivicompte_ibfk_2");
+
+                entity.HasOne(d => d.IdbudgetNavigation)
+                    .WithMany(p => p.Suivicomptes)
+                    .HasForeignKey(d => d.Idbudget)
+                    .HasConstraintName("suivicompte_ibfk_5");
 
                 entity.HasOne(d => d.IdcompteNavigation)
                     .WithMany(p => p.Suivicomptes)
