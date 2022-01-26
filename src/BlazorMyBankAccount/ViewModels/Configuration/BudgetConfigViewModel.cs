@@ -3,7 +3,7 @@
     public class BudgetConfigViewModel : BaseViewModel, IBudgetConfig
     {
         /// <inheritdoc cref="IBudgetConfig.AllBudgets"/>
-        public List<BudgetCompteView> AllBudgets { get; set; }
+        public List<Budget> AllBudgets { get; set; }
 
         /// <inheritdoc cref="IBudgetConfig.AllTypesBudget"/>
         public List<Typebudget> AllTypesBudget { get; set; }
@@ -15,7 +15,7 @@
         public BudgetValidation BudgetValidation { get; set; }
 
         /// <inheritdoc cref="IBudgetConfig.BudgetGrid"/>
-        public RadzenGrid<BudgetCompteView> BudgetGrid { get; set; }
+        public RadzenGrid<Budget> BudgetGrid { get; set; }
 
         /// <inheritdoc cref="IBudgetConfig.IsLoaded"/>
         public bool IsLoaded { get; set; }
@@ -34,7 +34,7 @@
 
             IsLoaded = false;
             BudgetValidation = new BudgetValidation();
-            AllBudgets = new List<BudgetCompteView>();
+            AllBudgets = new List<Budget>();
         }
 
         /// <inheritdoc cref="IBudgetConfig.CloseNewBudget"/>
@@ -49,18 +49,9 @@
         public async Task LoadAllBudgets()
         {
             AllTypesBudget = await dataAccess.GetTypesBudget();
-            var budgets = await dataAccess.GetBudgets();
+            AllBudgets = await dataAccess.GetBudgets();
             AllComptes = await dataAccess.GetAccounts();
             IsLoaded = true;
-
-            foreach (var item in budgets)
-            {
-                BudgetCompteView view = new BudgetCompteView();
-                view.Budget = item;
-                view.Compte = item.IdcompteNavigation;
-
-                AllBudgets.Add(view);
-            }
         }
 
         /// <inheritdoc cref="IBudgetConfig.OnValidSubmit"/>
@@ -71,7 +62,7 @@
                 // Ajout dans la base de donnée.
                 Budget newBudget = await dataAccess.AddBudget(BudgetValidation.NomBudget, BudgetValidation.Description, BudgetValidation.CompteId, BudgetValidation.TypeBudgetId, BudgetValidation.Montant);
 
-                AllBudgets.Add(newBudget.ToBudgetCompteView());
+                AllBudgets.Add(newBudget);
                 await BudgetGrid.Reload();
 
                 string message = $"Nouveau Budget : {newBudget.Nombudget} ajouté";

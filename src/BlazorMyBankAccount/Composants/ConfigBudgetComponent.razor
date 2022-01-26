@@ -100,27 +100,27 @@
 				PageSize="10"
 				AllowSorting="true"
 				Data="@ViewModel.AllBudgets"
-				TItem="BudgetCompteView"
+				TItem="Budget"
 				EmptyText="Aucun compte"
 				@ref="ViewModel.BudgetGrid">
 		<Columns>
-			<RadzenGridColumn TItem="BudgetCompteView"
+			<RadzenGridColumn TItem="Budget"
 								Property="Budget.Nombudget"
 								Title="Nom" />
 
-			<RadzenGridColumn TItem="BudgetCompteView"
+			<RadzenGridColumn TItem="Budget"
 								Property="Budget.Typebudget.Nomtypebudget"
 								Title="Type budget" />
 
-			<RadzenGridColumn TItem="BudgetCompteView"
+			<RadzenGridColumn TItem="Budget"
 								Property="Budget.Description"
 								Title="Description" />
 
-			<RadzenGridColumn TItem="BudgetCompteView"
-								Property="Compte.Nomcompte"
+			<RadzenGridColumn TItem="Budget"
+								Property="IdcompteNavigation.Nomcompte"
 								Title="Compte Stockage" />
 
-			<RadzenGridColumn TItem="BudgetCompteView"
+			<RadzenGridColumn TItem="Budget"
 								Property="Budget.Montant"
 								Title="Montant" />
 		</Columns>

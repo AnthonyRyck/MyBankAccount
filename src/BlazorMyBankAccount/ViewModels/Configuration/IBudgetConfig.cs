@@ -5,7 +5,7 @@
 		/// <summary>
 		/// Tous les Budgets
 		/// </summary>
-		List<BudgetCompteView> AllBudgets { get; set; }
+		List<Budget> AllBudgets { get; set; }
 
 		/// <summary>
 		/// Tous les types de budget
@@ -25,7 +25,7 @@
 		/// <summary>
 		/// Référence au tableau Radzen
 		/// </summary>
-		RadzenGrid<BudgetCompteView> BudgetGrid { get; set; }
+		RadzenGrid<Budget> BudgetGrid { get; set; }
 
 		/// <summary>
 		/// Indicateur si les données sont chargées.
