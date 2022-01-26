@@ -31,8 +31,11 @@
             };
 
             var actualConfig = await GetConfiguration();
-            context.Configbanks.Remove(actualConfig);
-            await context.SaveChangesAsync();
+            if(actualConfig != null)
+            {
+                context.Configbanks.Remove(actualConfig);
+                await context.SaveChangesAsync();
+            }
                         
             await context.AddAsync(configbank);
             await context.SaveChangesAsync();

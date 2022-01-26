@@ -30,6 +30,12 @@
         Task<IEnumerable<Typestransaction>> GetTypesTransaction();
         
         /// <summary>
+        /// Recupere la configuration.
+        /// </summary>
+        /// <returns></returns>
+        Task<Configbank> GetConfig();
+
+        /// <summary>
         /// Ajoute une nouvelle entré dans le suivi.
         /// </summary>
         /// <param name="nouvelleEntre"></param>

@@ -8,6 +8,11 @@
         IEnumerable<Compte> Comptes { get; }
 
         /// <summary>
+        /// Compte sélectionné.
+        /// </summary>
+        Compte CompteSelected { get; set; }
+
+        /// <summary>
         /// Liste de toutes les transactions sur un compte
         /// </summary>
         List<Suivicompte> SuiviDuCompte{ get; }
@@ -21,6 +26,11 @@
         /// Indique un chargement de donnée.
         /// </summary>
         bool IsLoading { get; }
+
+        /// <summary>
+        /// Indique s'il y a une configuration
+        /// </summary>
+        bool HasConfig { get; }
 
         /// <summary>
         /// Modèle de validation

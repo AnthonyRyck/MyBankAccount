@@ -41,5 +41,11 @@
             await context.SaveChangesAsync();
         }
 
+        /// <inheritdoc cref="ISuiviCompteData.GetConfig"/>
+        public async Task<Configbank> GetConfig()
+        {
+            return await context.Configbanks.Include(cpt => cpt.IdcomptedefaultNavigation)
+                            .FirstOrDefaultAsync();
+        }
     }
 }

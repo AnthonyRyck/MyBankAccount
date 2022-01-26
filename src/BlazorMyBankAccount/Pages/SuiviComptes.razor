@@ -4,17 +4,18 @@
 
 <h2>Suivi des Comptes</h2>
 
-<div class="w-100">
-	<RadzenDropDown AllowClear="true" 
-					TValue="Compte" 
-					FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
-					AllowFiltering="true" 
+@if (ViewModel.HasConfig)
+{
+	<div class="w-100">
+		<RadzenDropDown TValue="Compte" 
 					Placeholder="Choisir un compte..." 
 					Data=@ViewModel.Comptes
 					TextProperty="Nomcompte" 
+					Disabled=@ViewModel.IsLoading
 					Change=@(args => ViewModel.OnSelectCompte(args))
-					Disabled=@ViewModel.IsLoading />
-</div>
+					@bind-Value="ViewModel.CompteSelected" />
+	</div>
+}
 
 @if(ViewModel.IsLoading)
 {
@@ -22,14 +23,18 @@
 }
 else
 {
+	@if(ViewModel.HasConfig)
+	{
 	@*Pour l'ajout d'une nouvelle saisie.*@
-	<div class="padding-10">
+	<div>
 		<EditForm OnValidSubmit="@ViewModel.OnValidSubmit"
 						  Model="@ViewModel.TransacValidation">
 		
 		<RadzenCard>
 		@* Super IMPORTANT !!! *@
 		<DataAnnotationsValidator />
+
+		<h2>Ajout d'une nouvelle opération bancaire</h2>
 
 		<div class="row">
 		
@@ -163,6 +168,15 @@ else
 		</Columns>
 	</RadzenGrid>
 </div>
+
+}
+	else
+	{
+	<h1>Attention</h1>
+    
+    <div>Aucun compte par défaut configuré.</div>
+    <div>Connectez vous, et configurer un compte par défaut et le mois/année de traitement.</div>	
+	}
 
 }
 

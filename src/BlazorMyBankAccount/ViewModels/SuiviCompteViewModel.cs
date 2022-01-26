@@ -24,21 +24,35 @@
 
         public bool IsLoading { get; private set; }
 
-        
+        public bool HasConfig { get; private set; }
+
+
         public RadzenGrid<Suivicompte> SaisieGrid { get; set; }
+        public Compte CompteSelected { get; set; }
 
 
 
-        private Compte CompteSelected;
+        private Configbank Configbank;
 
         public async Task InitData()
         {
             IsLoading = true;
             TypesTransaction = await dataContext.GetTypesTransaction();
             Comptes = await dataContext.GetComptes();
-            SuiviDuCompte = await dataContext.GetSuivicomptes(0, 2022, 01);
+
+            Configbank = await dataContext.GetConfig();
+            if(Configbank != null)
+            {
+                CompteSelected = Configbank.IdcomptedefaultNavigation;
+                SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
+                HasConfig = true;
+            }
+            else
+            {
+                HasConfig = false;
+            }
+            
             IsLoading = false;
-            CompteSelected = await dataContext.GetCompte(0);
         }
 
 
@@ -48,7 +62,7 @@
             Compte compteSelected = (Compte)compte;
             CompteSelected = compteSelected;
 
-            SuiviDuCompte = await dataContext.GetSuivicomptes(compteSelected.Idcompte, 2022, 01);
+            SuiviDuCompte = await dataContext.GetSuivicomptes(compteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
             IsLoading = false;
         }
 
@@ -65,8 +79,8 @@
                     Isvalidate = TransacValidation.IsValide,
                     Type = TransacValidation.TypeTransac,
                     Idcompte = CompteSelected.Idcompte,
-                    Idannee = 2022,
-                    Idmois = 1
+                    Idannee = Configbank.Annee,
+                    Idmois = Configbank.Mois
                 };
                 await dataContext.AddNouvelleSaisie(nouvelleEntre);
 
