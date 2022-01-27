@@ -1,0 +1,134 @@
+﻿<div>
+	<EditForm OnValidSubmit="@OnValidSubmit"
+					  Model="@ModelValidation">
+	
+	<RadzenCard>
+	@* Super IMPORTANT !!! *@
+	<DataAnnotationsValidator />
+
+	<h2>Ajout d'une nouvelle opération bancaire</h2>
+
+	<div class="row">
+		<div class="margin-5px w-50 col">
+			<div>
+			Date de la transaction
+			</div>
+
+			<RadzenDatePicker @bind-Value="ModelValidation.DateTransaction"
+							DateFormat="d" />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Nom transaction
+			</div>
+			<div>
+				<ValidationMessage For="@(() => ModelValidation.NomTransaction)" />
+			</div>
+			<RadzenTextBox Placeholder="Nom..."
+						@bind-Value="ModelValidation.NomTransaction" />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Montant de la transaction
+			</div>
+
+			<div>
+				<ValidationMessage For="@(() => ModelValidation.Montant)" />
+			</div>
+			<RadzenNumeric TValue="decimal" 
+							Format="c" 
+							@bind-Value="ModelValidation.Montant"
+							Placeholder="Montant" 
+							 />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Sur un budget ?
+			</div>
+
+			<RadzenDropDown AllowClear="true" 
+						TValue="Budget" 
+						Placeholder="Choisir un budget..." 
+						Data=@Budgets
+						TextProperty="Nombudget"
+						@bind-Value="ModelValidation.Budget" />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Type de transaction
+			</div>
+
+			<div>
+				<ValidationMessage For="@(() => ModelValidation.TypeTransac)" />
+			</div>
+			<RadzenDropDown AllowClear="true" 
+						TValue="Typestransaction" 
+						Placeholder="Choisir un type..." 
+						Data=@Transactions
+						TextProperty="Nom"
+						@bind-Value="ModelValidation.TypeTransac"
+						 />
+
+						 @*Disabled=@IsLoading*@
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Transaction validé ?
+			</div>
+
+			<RadzenCheckBox @bind-Value="ModelValidation.IsValide" 
+							Name="CheckBox1" 
+							TValue="bool" />
+		</div>
+
+		<div class="margin-10px col">
+			<button type="submit" class="padding-5">Ajouter</button>
+
+			<button type="reset"
+					class="padding-5"
+					@onclick="AnnuleSaisie">
+				Annuler
+			</button>
+		</div>
+
+			</div>
+		</RadzenCard>
+
+	<div class="row">
+		<div>Ajouter cette ligne comme transaction répétée ?</div>
+		
+	</div>
+	</EditForm>
+</div>
+
+@code {
+
+	[Parameter]
+	public TransactionValidation ModelValidation { get; set; }
+
+	[Parameter]
+	public IEnumerable<Typestransaction> Transactions { get; set; }
+
+	[Parameter]
+	public IEnumerable<Budget> Budgets { get; set; }
+
+	[Parameter]
+	public Action<Action> CallState { get; set; }
+
+	[Parameter]
+	public EventCallback OnValidSubmit { get; set; }
+
+	[Parameter]
+	public EventCallback AnnuleSaisie { get; set; }
+
+
+	private void Test()
+	{
+		
+	}
+}

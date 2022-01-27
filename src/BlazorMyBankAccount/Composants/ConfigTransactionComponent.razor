@@ -138,8 +138,9 @@ else
 }
 
 @code {
-   	protected override async Task OnInitializedAsync()
+	protected override async Task OnInitializedAsync()
 	{
+		ViewModel.SetStateHasChanged(StateHasChanged);
 		await ViewModel.LoadAllTransactions();
 	}
 }

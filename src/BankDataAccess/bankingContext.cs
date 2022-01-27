@@ -23,7 +23,6 @@ namespace BankDataAccess
         public virtual DbSet<Typebudget> Typebudgets { get; set; } = null!;
         public virtual DbSet<Typestransaction> Typestransactions { get; set; } = null!;
 
-       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
@@ -155,9 +154,8 @@ namespace BankDataAccess
 
             modelBuilder.Entity<Suivicompte>(entity =>
             {
-                entity.HasKey(e => new { e.Idcompte, e.Idannee, e.Idmois })
-                    .HasName("PRIMARY")
-                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+                entity.HasKey(e => e.Idsuivi)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("suivicompte");
 
@@ -165,25 +163,30 @@ namespace BankDataAccess
 
                 entity.HasIndex(e => e.Idbudget, "idbudget");
 
+                entity.HasIndex(e => e.Idcompte, "idcompte");
+
                 entity.HasIndex(e => e.Idmois, "idmois");
 
                 entity.HasIndex(e => e.Typeid, "typeid");
 
-                entity.Property(e => e.Idcompte).HasColumnName("idcompte");
-
-                entity.Property(e => e.Idannee).HasColumnName("idannee");
-
-                entity.Property(e => e.Idmois).HasColumnName("idmois");
+                entity.Property(e => e.Idsuivi).HasColumnName("idsuivi");
 
                 entity.Property(e => e.Datetransaction)
                     .HasColumnType("datetime")
                     .HasColumnName("datetransaction");
 
+                entity.Property(e => e.Idannee).HasColumnName("idannee");
+
                 entity.Property(e => e.Idbudget).HasColumnName("idbudget");
+
+                entity.Property(e => e.Idcompte).HasColumnName("idcompte");
+
+                entity.Property(e => e.Idmois).HasColumnName("idmois");
 
                 entity.Property(e => e.Isvalidate)
                     .HasColumnType("bit(1)")
-                    .HasColumnName("isvalidate");
+                    .HasColumnName("isvalidate")
+                    .HasDefaultValueSql("b'0'");
 
                 entity.Property(e => e.Montant)
                     .HasPrecision(6, 2)

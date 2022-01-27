@@ -5,6 +5,7 @@ namespace BankDataAccess
 {
     public partial class Suivicompte
     {
+        public int Idsuivi { get; set; }
         public int Idcompte { get; set; }
         public int Idannee { get; set; }
         public int Idmois { get; set; }

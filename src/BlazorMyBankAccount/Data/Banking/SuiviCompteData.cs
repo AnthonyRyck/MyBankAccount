@@ -16,25 +16,17 @@
         /// <inheritdoc cref="ISuiviCompteData.((int)"/>
         public async Task<IEnumerable<Budget>> GetBudgets(int idCompte)
         {
-            //from bd in context.Budgets
-            //where bd.Idcomptes.FirstOrDefault(x => x.Idcompte == idCompte)
-            return new List<Budget>();
-            //await context.Budgets.Where(bud =>bud.)
-            //    ToListAsync();
-
-            //return context.Comptes.Where(x => x.Idcompte == idCompte)
-            //    .Include(bud => bud.Idbudgets)
-            //    .Select(x => x.Idbudgets).;
-            //    //.ToListAsync();
+            return await context.Budgets.Where(x => x.Idcompte == idCompte).ToListAsync();
         }
 
 
-        /// <inheritdoc cref="ISuiviCompteData.GetSuivicomptes(int, int, int)"/>
-        public async Task<List<Suivicompte>> GetSuivicomptes(int idCompte, int annnee, int mois)
+        /// <inheritdoc cref="ISuiviCompteData.GetSuivicomptes(int, int, int, int?)"/>
+        public async Task<List<Suivicompte>> GetSuivicomptes(int idCompte, int annnee, int mois, int? idBudget = null)
         {
             return await context.Suivicomptes.Where(cpt => cpt.Idcompte == idCompte
                                                             && cpt.Idannee == annnee
-                                                            && cpt.Idmois == mois).ToListAsync();
+                                                            && cpt.Idmois == mois
+                                                            && cpt.Idbudget == idBudget).ToListAsync();
         }
 
         /// <inheritdoc cref="ISuiviCompteData.GetTypesTransaction"/>

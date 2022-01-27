@@ -38,13 +38,14 @@ FOREIGN KEY(idcompte) REFERENCES comptes(idcompte),
 PRIMARY KEY(idbudget, idcompte));
 
 CREATE TABLE suivicompte
-(idcompte int NOT NULL,
+(idsuivi int NOT NULL AUTO_INCREMENT,
+idcompte int NOT NULL,
 idannee int NOT NULL,
 idmois int NOT NULL,
 datetransaction DATETIME,
 typeid int NOT NULL,
 nomtransaction VARCHAR(25),
-isvalidate bit(1) NOT NULL,
+isvalidate bit(1) NOT NULL DEFAULT 0,
 montant DECIMAL(6,2) NOT NULL,
 idbudget int,
 FOREIGN KEY(idcompte) REFERENCES comptes(idcompte),
@@ -52,7 +53,7 @@ FOREIGN KEY(idannee) REFERENCES anneetraitement(annee),
 FOREIGN KEY(idmois) REFERENCES moistraitement(mois),
 FOREIGN KEY(typeid) REFERENCES typestransaction(idtype),
 FOREIGN KEY(idbudget) REFERENCES budgets(idbudget),
-PRIMARY KEY(idcompte, idannee, idmois));
+PRIMARY KEY(idsuivi));
 
 CREATE TABLE transactionobligatoire
 (idtransac int NOT NULL AUTO_INCREMENT,

@@ -3,6 +3,7 @@
     public class SuiviCompteViewModel : BaseViewModel, ISuiviCompteViewModel
     {
         private ISuiviCompteData dataContext;
+        private TransactionValidation TransacValidation;
 
         public SuiviCompteViewModel(ISuiviCompteData data, NotificationService notificationService)
             : base(notificationService)
@@ -18,9 +19,11 @@
 
         public List<Suivicompte> SuiviDuCompte { get; private set; }
 
+        public RenderFragment DisplayRenderFragment { get; private set; }
+
         public IEnumerable<Typestransaction> TypesTransaction { get; private set;  }
 
-        public TransactionValidation TransacValidation { get; private set;  }
+        
 
         public bool IsLoading { get; private set; }
 
@@ -35,6 +38,7 @@
 
 
         private Configbank Configbank;
+        private Action StateChanged;
 
         public async Task InitData()
         {
@@ -72,8 +76,41 @@
             IsLoading = false;
         }
 
+        public void SetStateHasChanged(Action state)
+		{
+            StateChanged = state;
 
-        public async void OnValidSubmit()
+        }
+
+
+
+		#region Affichage nouvelle opération
+        
+
+		public void DisplayNewOperation()
+        {
+            RenderFragment CreateCompo() => builder =>
+            {
+                builder.OpenComponent(0, typeof(NouvelleOperation));
+                
+                builder.AddAttribute(1, "ModelValidation", this.TransacValidation);
+                builder.AddAttribute(2, "Transactions", this.TypesTransaction);
+                builder.AddAttribute(3, "Budgets", Budgets);
+
+                EventCallback eventOnValide = EventCallback.Factory.Create(this, OnValidSubmit);
+                builder.AddAttribute(4, "OnValidSubmit", eventOnValide);
+
+                EventCallback eventOnCancel = EventCallback.Factory.Create(this, AnnulerSaisie);
+                builder.AddAttribute(5, "AnnuleSaisie", eventOnCancel);
+
+                builder.CloseComponent();
+            };
+
+            DisplayRenderFragment = CreateCompo();
+        }
+
+
+        private async void OnValidSubmit()
         {
             try
             {
@@ -88,6 +125,12 @@
                     Idannee = Configbank.Annee,
                     Idmois = Configbank.Mois
                 };
+
+                if(TransacValidation.Budget != null)
+				{
+                    nouvelleEntre.Idbudget = TransacValidation.Budget.Idbudget;
+                }
+
                 await dataContext.AddNouvelleSaisie(nouvelleEntre);
 
                 SuiviDuCompte.Add(nouvelleEntre);
@@ -95,6 +138,7 @@
 
                 NotificationSuccess("Ajout OK", "Ajout de l'opération");
                 TransacValidation = new TransactionValidation();
+                StateChanged.Invoke();
             }
             catch (Exception ex)
             {
@@ -102,10 +146,17 @@
             }
         }
 
-        public void AnnulerSaisie()
+        private void AnnulerSaisie()
         {
+            DisplayRenderFragment = null;
             TransacValidation = new TransactionValidation();
+            StateChanged.Invoke();
         }
+
+		#endregion
+
+
+        
 
         #endregion
 

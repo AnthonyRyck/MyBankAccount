@@ -18,6 +18,11 @@
         IEnumerable<Budget> Budgets { get; }
 
         /// <summary>
+        /// Pour afficher des composants
+        /// </summary>
+        RenderFragment DisplayRenderFragment { get; }
+
+        /// <summary>
         /// Liste de toutes les transactions sur un compte
         /// </summary>
         List<Suivicompte> SuiviDuCompte{ get; }
@@ -37,11 +42,6 @@
         /// </summary>
         bool HasConfig { get; }
 
-        /// <summary>
-        /// Modèle de validation
-        /// </summary>
-        TransactionValidation TransacValidation { get; }
-
         RadzenGrid<Suivicompte> SaisieGrid { get; set; }
 
         /// <summary>
@@ -56,15 +56,8 @@
         /// <returns></returns>
         Task OnSelectCompte(object compte);
 
-        /// <summary>
-        /// Valide la saisie
-        /// </summary>
-        void OnValidSubmit();
+        void SetStateHasChanged(Action state);
 
-        /// <summary>
-        /// Annule la saisie
-        /// </summary>
-        void AnnulerSaisie();
-
+        void DisplayNewOperation();
     }
 }

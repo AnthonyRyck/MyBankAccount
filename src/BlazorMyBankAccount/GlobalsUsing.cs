@@ -9,6 +9,7 @@ global using BlazorMyBankAccount.ViewModels.Configuration;
 global using BankDataAccess;
 global using BlazorMyBankAccount.Data.Banking;
 global using BlazorMyBankAccount.ValidationModels;
+global using BlazorMyBankAccount.Composants.SuiviCompte;
 
 global using Radzen;
 global using Radzen.Blazor;

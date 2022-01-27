@@ -20,8 +20,9 @@
         /// <param name="idCompte">ID du compte</param>
         /// <param name="annnee">Année du suivi</param>
         /// <param name="mois">Mois du suivi</param>
+        /// <param name="idBudget">ID du budget</param>
         /// <returns></returns>
-        Task<List<Suivicompte>> GetSuivicomptes(int idCompte, int annnee, int mois);
+        Task<List<Suivicompte>> GetSuivicomptes(int idCompte, int annnee, int mois, int? idBudget = null);
         
         /// <summary>
         /// Retourne tous les types de transaction.

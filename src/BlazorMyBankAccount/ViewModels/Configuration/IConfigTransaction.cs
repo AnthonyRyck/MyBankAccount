@@ -57,5 +57,12 @@
 		/// Ferme la fenêtre d'une nouvelle transaction.
 		/// </summary>
 		void CloseNewAccount();
+
+		/// <summary>
+		/// Donne la possibilité au ViewModel d'indiquer un changement
+		/// à la vue.
+		/// </summary>
+		/// <param name="stateHasChanged"></param>
+		void SetStateHasChanged(Action stateHasChanged);
 	}
 }

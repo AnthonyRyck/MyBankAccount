@@ -3,6 +3,7 @@
     public class ConfigTransactionViewModel : BaseViewModel, IConfigTransaction
     {
         private ITransactionData dataAccess;
+        private Action stateChanged;
 
         public ConfigTransactionViewModel(ITransactionData context, NotificationService notificationService)
             : base(notificationService)
@@ -68,7 +69,8 @@
                 string message = $"Nouvelle operation : {ModelValidation.NomTransaction} ajoutée";
                 NotificationSuccess("Sauvegarde OK", message);
 
-                ModelValidation = new TransactionMensuelleValidation();
+                CloseNewAccount();
+                stateChanged?.Invoke();
             }
             catch (Exception ex)
             {
@@ -87,6 +89,11 @@
         {
             DialogIsOpen = false;
             ModelValidation = new TransactionMensuelleValidation();
+        }
+
+        public void SetStateHasChanged(Action stateHasChanged)
+        {
+            stateChanged = stateHasChanged;
         }
 
         #endregion

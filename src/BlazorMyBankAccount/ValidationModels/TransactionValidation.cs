@@ -19,6 +19,8 @@ namespace BlazorMyBankAccount.ValidationModels
         public Typestransaction TypeTransac { get; set; }
 
 
-        public bool IsValide { get; set; } = false;
+		public Budget Budget { get; set; }
+
+		public bool IsValide { get; set; } = false;
     }
 }
