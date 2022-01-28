@@ -10,6 +10,16 @@ namespace BlazorMyBankAccount.ViewModels
         IEnumerable<Compte> Comptes { get; }
 
         /// <summary>
+        /// Montant prévisionnel
+        /// </summary>
+        decimal MontantPrevisionnel { get; }
+
+        /// <summary>
+        /// Montant reel.
+        /// </summary>
+        decimal MontantActuel { get; }
+
+        /// <summary>
         /// Compte sélectionné.
         /// </summary>
         Compte CompteSelected { get; set; }
@@ -18,6 +28,11 @@ namespace BlazorMyBankAccount.ViewModels
         /// Liste de tous les budgets sur ce compte.
         /// </summary>
         IEnumerable<Budget> Budgets { get; }
+
+        /// <summary>
+        /// Montant restant pour le budget.
+        /// </summary>
+        decimal MontantRestantBudget { get; }
 
         /// <summary>
         /// Pour afficher des composants
@@ -65,8 +80,8 @@ namespace BlazorMyBankAccount.ViewModels
 
         void DisplayVirement();
 
-
-        //void OnMenuItemClick(MenuItemEventArgs args);
         void OnCellContextMenu(DataGridCellMouseEventArgs<Suivicompte> args);
+
+        Task LoadBudget(int num);
     }
 }

@@ -1,7 +1,6 @@
 ﻿@page "/suivi"
 @attribute [Authorize(Roles = "Admin, Member")]
 @inject ISuiviCompteViewModel ViewModel
-@*@inject ContextMenuService ContextMenuService*@
 
 <h2>Suivi des Comptes</h2>
 
@@ -39,9 +38,13 @@ else
 <div class="padding-5">
 
 	<RadzenTabs TabPosition="TabPosition.Top"
-				>
+				Change=@ViewModel.LoadBudget >
 		<Tabs>
 			<RadzenTabsItem Text="Compte">
+				<div>
+					<span><strong>Actuelle</strong>: @ViewModel.MontantActuel</span>
+					<span><strong>Prévision</strong>: @ViewModel.MontantPrevisionnel</span>
+				</div>
 				<RadzenDataGrid AllowFiltering="true"
 							FilterCaseSensitivity="FilterCaseSensitivity.Default"
 							AllowPaging="true"
@@ -83,7 +86,6 @@ else
 											Width="100px">
 							<Template Context="suivi">
 								<RadzenCheckBox Value="suivi.Isvalidate"
-												Name="CheckBox1"
 												Disabled="true"
 												TValue="bool" />
 							</Template>
@@ -95,7 +97,8 @@ else
 			@foreach(Budget budget in ViewModel.Budgets)
 			{
 			<RadzenTabsItem Text="@budget.Nombudget">
-				<div>Description : @budget.Description</div>
+				<div>Montant de base : @budget.Montant</div>
+				<div>Montant restant : @ViewModel.MontantRestantBudget</div>
 
 				<RadzenDataGrid AllowFiltering="true"
 							FilterCaseSensitivity="FilterCaseSensitivity.Default"

@@ -27,6 +27,10 @@ namespace BlazorMyBankAccount.ViewModels
 
         public IEnumerable<Compte> Comptes { get; private set; }
 
+        public decimal MontantPrevisionnel { get; private set; }
+
+        public decimal MontantActuel { get; private set; }
+
         public List<Suivicompte> SuiviDuCompte { get; private set; }
 
         public RenderFragment DisplayRenderFragment { get; private set; }
@@ -39,6 +43,7 @@ namespace BlazorMyBankAccount.ViewModels
 
         public IEnumerable<Budget> Budgets { get; private set; }
 
+        public decimal MontantRestantBudget { get; private set; }
 
         public RadzenDataGrid<Suivicompte> SaisieGrid { get; set; }
         public Compte CompteSelected { get; set; }
@@ -60,6 +65,9 @@ namespace BlazorMyBankAccount.ViewModels
                 CompteSelected = Configbank.IdcomptedefaultNavigation;
                 SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
                 Budgets = await dataContext.GetBudgets(CompteSelected.Idcompte);
+
+                FaireSomme();
+
                 HasConfig = true;
             }
             else
@@ -81,6 +89,8 @@ namespace BlazorMyBankAccount.ViewModels
             SuiviDuCompte = await dataContext.GetSuivicomptes(compteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
             Budgets = await dataContext.GetBudgets(CompteSelected.Idcompte);
 
+            FaireSomme();
+
             IsLoading = false;
         }
 
@@ -90,6 +100,7 @@ namespace BlazorMyBankAccount.ViewModels
 
         }
 
+        #region ContextMenu
 
         public void OnCellContextMenu(DataGridCellMouseEventArgs<Suivicompte> args)
         {
@@ -140,6 +151,8 @@ namespace BlazorMyBankAccount.ViewModels
         private async Task ValidateTransaction(Suivicompte ligneSuivi, bool canValidate)
         {
             await dataContext.Validate(ligneSuivi, canValidate);
+            FaireSomme();
+            StateChanged.Invoke();
         }
 
         private async Task AddNewTransactionObligatoire(Suivicompte ligneCompte)
@@ -156,6 +169,7 @@ namespace BlazorMyBankAccount.ViewModels
             await dataContext.AddTransactionObligatoire(newTransac);
         }
 
+        #endregion
 
         #region Affichage nouvelle opération
 
@@ -332,8 +346,30 @@ namespace BlazorMyBankAccount.ViewModels
 
         #endregion
 
+        
+        public async Task LoadBudget(int num)
+        {
+            if (num == 0)
+            {
+                SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
+                FaireSomme();
+            }
+            else
+            {
+                Budget budgetSelected = Budgets.ToList()[num - 1];
+                SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois, budgetSelected.Idbudget);
+
+                MontantRestantBudget = budgetSelected.Montant.Value + SuiviDuCompte.Sum(x => x.Montant);
+            }
+        }
 
         #endregion
+
+        private void FaireSomme()
+        {
+            MontantActuel = SuiviDuCompte.Where(x => x.Isvalidate).Sum(x => x.Montant);
+            MontantPrevisionnel = MontantActuel + SuiviDuCompte.Where(x => !x.Isvalidate).Sum(x => x.Montant);
+        }
 
     }
 }

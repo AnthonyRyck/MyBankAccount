@@ -31,7 +31,7 @@
 
 		<div class="margin-5px col">
 			<div>
-				Montant de la transaction
+				Montant
 			</div>
 
 			<div>
@@ -42,19 +42,6 @@
 							@bind-Value="ModelValidation.Montant"
 							Placeholder="Montant" 
 							 />
-		</div>
-
-		<div class="margin-5px col">
-			<div>
-				Sur un budget ?
-			</div>
-
-			<RadzenDropDown AllowClear="true" 
-						TValue="Budget" 
-						Placeholder="Choisir un budget..." 
-						Data=@Budgets
-						TextProperty="Nombudget"
-						@bind-Value="ModelValidation.Budget" />
 		</div>
 
 		<div class="margin-5px col">
@@ -73,6 +60,19 @@
 						@bind-Value="ModelValidation.TypeTransac"/>
 		</div>
 
+		<div class="margin-5px col">
+			<div>
+				Sur un budget ?
+			</div>
+
+			<RadzenDropDown AllowClear="true" 
+						TValue="Budget" 
+						Placeholder="Choisir un budget..." 
+						Data=@Budgets
+						TextProperty="Nombudget"
+						@bind-Value="ModelValidation.Budget" />
+		</div>
+		
 		<div class="margin-5px col">
 			<div>
 				Transaction validé ?
