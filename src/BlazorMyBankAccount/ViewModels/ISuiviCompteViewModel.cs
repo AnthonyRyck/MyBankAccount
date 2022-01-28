@@ -1,4 +1,6 @@
-﻿namespace BlazorMyBankAccount.ViewModels
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace BlazorMyBankAccount.ViewModels
 {
     public interface ISuiviCompteViewModel
     {
@@ -42,7 +44,7 @@
         /// </summary>
         bool HasConfig { get; }
 
-        RadzenGrid<Suivicompte> SaisieGrid { get; set; }
+        RadzenDataGrid<Suivicompte> SaisieGrid { get; set; }
 
         /// <summary>
         /// Initialise les donnees.
@@ -62,5 +64,9 @@
 
 
         void DisplayVirement();
+
+
+        //void OnMenuItemClick(MenuItemEventArgs args);
+        void OnCellContextMenu(DataGridCellMouseEventArgs<Suivicompte> args);
     }
 }

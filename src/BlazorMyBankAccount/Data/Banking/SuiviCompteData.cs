@@ -56,5 +56,18 @@
             await context.AddAsync(compteRecevant);
             await context.SaveChangesAsync();
         }
+
+        public async Task AddTransactionObligatoire(Transactionobligatoire newTransac)
+        {
+            await context.AddAsync(newTransac);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task Validate(Suivicompte ligneSuivi, bool isValidate)
+        {
+            ligneSuivi.Isvalidate = isValidate;
+            context.Update(ligneSuivi);
+            await context.SaveChangesAsync();
+        }
     }
 }

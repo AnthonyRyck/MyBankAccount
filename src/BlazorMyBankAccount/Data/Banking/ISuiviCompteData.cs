@@ -33,14 +33,13 @@
         /// <summary>
         /// Recupere la configuration.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Retourne la config</returns>
         Task<Configbank> GetConfig();
 
         /// <summary>
         /// Ajoute une nouvelle entré dans le suivi.
         /// </summary>
         /// <param name="nouvelleEntre"></param>
-        /// <returns></returns>
         Task AddNouvelleSaisie(Suivicompte nouvelleEntre);
 
         /// <summary>
@@ -48,7 +47,21 @@
         /// </summary>
         /// <param name="comptePerdant"></param>
         /// <param name="compteRecevant"></param>
-        /// <returns></returns>
 		Task AddVirement(Suivicompte comptePerdant, Suivicompte compteRecevant);
-	}
+
+        /// <summary>
+        /// Permet d'ajouter une nouvelle ligne dans les transactions
+        /// obligatoire.
+        /// </summary>
+        /// <param name="newTransac"></param>
+        Task AddTransactionObligatoire(Transactionobligatoire newTransac);
+        
+        /// <summary>
+        /// Valide la transaction
+        /// </summary>
+        /// <param name="ligneSuivi"></param>
+        /// <param name="isValidate"></param>
+        /// <returns></returns>
+        Task Validate(Suivicompte ligneSuivi, bool isValidate);
+    }
 }

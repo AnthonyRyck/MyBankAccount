@@ -1,14 +1,22 @@
-﻿namespace BlazorMyBankAccount.ViewModels
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace BlazorMyBankAccount.ViewModels
 {
     public class SuiviCompteViewModel : BaseViewModel, ISuiviCompteViewModel
     {
         private ISuiviCompteData dataContext;
         private TransactionValidation TransacValidation;
         private VirementOperationValidation VirementOperationValidation;
+        private ContextMenuService ContextMenu;
 
-        public SuiviCompteViewModel(ISuiviCompteData data, NotificationService notificationService)
+        private const string MENU_NEW_TRANSAC_OBLI = "Ajouter aux opérations répétées";
+        private const string MENU_VALIDER = "Valider l'opération";
+        private const string MENU_INVALIDER = "Invalider l'opération";
+
+        public SuiviCompteViewModel(ISuiviCompteData data, NotificationService notificationService, ContextMenuService contextMenuSvc)
             : base(notificationService)
         {
+            ContextMenu = contextMenuSvc;
             dataContext = data;
             TransacValidation = new TransactionValidation();
             VirementOperationValidation = new VirementOperationValidation();
@@ -25,8 +33,6 @@
 
         public IEnumerable<Typestransaction> TypesTransaction { get; private set;  }
 
-        
-
         public bool IsLoading { get; private set; }
 
         public bool HasConfig { get; private set; }
@@ -34,7 +40,7 @@
         public IEnumerable<Budget> Budgets { get; private set; }
 
 
-        public RadzenGrid<Suivicompte> SaisieGrid { get; set; }
+        public RadzenDataGrid<Suivicompte> SaisieGrid { get; set; }
         public Compte CompteSelected { get; set; }
 
 
@@ -85,11 +91,76 @@
         }
 
 
+        public void OnCellContextMenu(DataGridCellMouseEventArgs<Suivicompte> args)
+        {
+            var menus = new List<ContextMenuItem> {
+                new ContextMenuItem(){ Text = MENU_NEW_TRANSAC_OBLI, Value = args }
+                };
 
-		#region Affichage nouvelle opération
-        
+            if (args.Data.Isvalidate)
+                menus.Add(new ContextMenuItem() { Text = MENU_INVALIDER, Value = args });
+            else
+                menus.Add(new ContextMenuItem() { Text = MENU_VALIDER, Value = args });
 
-		public void DisplayNewOperation()
+            ContextMenu.Open(args, menus, OnMenuItemClick);
+        }
+
+        private async void OnMenuItemClick(MenuItemEventArgs args)
+        {
+            var ligneSuivi = (DataGridCellMouseEventArgs<Suivicompte>)args.Value;
+
+            switch (args.Text)
+            {
+                case MENU_NEW_TRANSAC_OBLI:
+                    if (!ligneSuivi.Data.Isvalidate)
+                    {
+                        NotificationError("Ne peut être que sur une ligne validée.");
+                        return;
+                    }
+                    await AddNewTransactionObligatoire(ligneSuivi.Data);
+                    break;
+
+                case MENU_VALIDER:
+                    await ValidateTransaction(ligneSuivi.Data, true);
+                    await SaisieGrid.Reload();
+                    break;
+
+                case MENU_INVALIDER:
+                    await ValidateTransaction(ligneSuivi.Data, false);
+                    await SaisieGrid.Reload();
+                    break;
+
+                default:
+                    break;
+            }
+
+            ContextMenu.Close();
+        }
+
+        private async Task ValidateTransaction(Suivicompte ligneSuivi, bool canValidate)
+        {
+            await dataContext.Validate(ligneSuivi, canValidate);
+        }
+
+        private async Task AddNewTransactionObligatoire(Suivicompte ligneCompte)
+        {
+            Transactionobligatoire newTransac = new Transactionobligatoire()
+            {
+                Idcompte = ligneCompte.Idcompte,
+                Jour = ligneCompte.Datetransaction.Value.Day,
+                Montant = ligneCompte.Montant,
+                Nomtransaction = ligneCompte.Nomtransaction,
+                Type = ligneCompte.Type
+            };
+
+            await dataContext.AddTransactionObligatoire(newTransac);
+        }
+
+
+        #region Affichage nouvelle opération
+
+
+        public void DisplayNewOperation()
         {
             RenderFragment CreateCompo() => builder =>
             {
