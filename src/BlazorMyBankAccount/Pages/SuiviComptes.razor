@@ -27,6 +27,7 @@ else
 	{
 		<div>
 			<button @onclick="ViewModel.DisplayNewOperation">Nouvelle Operation</button>
+			<button @onclick="ViewModel.DisplayVirement">Virement</button>
 		</div>
 
 		@if(ViewModel.DisplayRenderFragment != null)
@@ -36,7 +37,8 @@ else
 
 <div class="padding-5">
 
-	<RadzenTabs TabPosition="TabPosition.Top">
+	<RadzenTabs TabPosition="TabPosition.Top"
+				>
 		<Tabs>
 			<RadzenTabsItem Text="Compte">
 				<RadzenGrid AllowFiltering="true"
@@ -92,7 +94,56 @@ else
 			@foreach(Budget budget in ViewModel.Budgets)
 			{
 			<RadzenTabsItem Text="@budget.Nombudget">
-				<div>Pour tester @budget.Description</div>
+				<div>Description : @budget.Description</div>
+
+				<RadzenGrid AllowFiltering="true"
+							FilterCaseSensitivity="FilterCaseSensitivity.Default"
+							AllowPaging="true"
+							PageSize="30"
+							AllowSorting="true"
+							Data="@ViewModel.SuiviDuCompte"
+							TItem="Suivicompte"
+							EmptyText="Aucune transaction"
+							@ref="ViewModel.SaisieGrid">
+					<Columns>
+						@*Date*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Datetransaction"
+										  Title="Date"
+										  Filterable="false"
+										  Format="date-time">
+							<Template Context="transact">
+								@String.Format("{0:d}", transact.Datetransaction)
+							</Template>
+						</RadzenGridColumn>
+
+						@*Montant*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Montant"
+										  Title="Montant" />
+			
+						@*Nom de la transaction*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Nomtransaction"
+										  Title="Nom" />
+						@*Type*@
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Type.Nom"
+										  Title="Type">
+						</RadzenGridColumn>
+
+						<RadzenGridColumn TItem="Suivicompte"
+										  Property="Isvalidate"
+										  Title="Est validé ?"
+											Width="70px">
+							<Template Context="suivi">
+								<RadzenCheckBox Value="suivi.Isvalidate"
+												Name="CheckBox1" 
+												TValue="bool" />
+							</Template>
+						</RadzenGridColumn>
+					</Columns>
+				</RadzenGrid>
 			</RadzenTabsItem>
 			}
 		</Tabs>

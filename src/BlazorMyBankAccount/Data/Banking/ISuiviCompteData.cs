@@ -42,5 +42,13 @@
         /// <param name="nouvelleEntre"></param>
         /// <returns></returns>
         Task AddNouvelleSaisie(Suivicompte nouvelleEntre);
-    }
+
+        /// <summary>
+        /// Virement entre 2 comptes.
+        /// </summary>
+        /// <param name="comptePerdant"></param>
+        /// <param name="compteRecevant"></param>
+        /// <returns></returns>
+		Task AddVirement(Suivicompte comptePerdant, Suivicompte compteRecevant);
+	}
 }

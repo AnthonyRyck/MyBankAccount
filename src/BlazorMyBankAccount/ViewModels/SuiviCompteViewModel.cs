@@ -4,12 +4,14 @@
     {
         private ISuiviCompteData dataContext;
         private TransactionValidation TransacValidation;
+        private VirementOperationValidation VirementOperationValidation;
 
         public SuiviCompteViewModel(ISuiviCompteData data, NotificationService notificationService)
             : base(notificationService)
         {
             dataContext = data;
             TransacValidation = new TransactionValidation();
+            VirementOperationValidation = new VirementOperationValidation();
         }
 
 
@@ -153,10 +155,112 @@
             StateChanged.Invoke();
         }
 
-		#endregion
+        #endregion
 
+        #region Affichage virement
 
-        
+        private IEnumerable<Budget> budgetsOnCompte = new List<Budget>();
+
+        public void DisplayVirement()
+		{
+            var othersComptes = Comptes.ToList();
+            othersComptes.Remove(CompteSelected);
+
+            RenderFragment CreateCompo() => builder =>
+            {
+                builder.OpenComponent(0, typeof(Virement));
+                
+                builder.AddAttribute(1, "ModelValidation", this.VirementOperationValidation);
+                builder.AddAttribute(2, "Comptes", othersComptes);
+                builder.AddAttribute(3, "Budgets", budgetsOnCompte);
+
+                EventCallback eventOnValide = EventCallback.Factory.Create(this, OnValidSubmitVirement);
+                builder.AddAttribute(4, "OnValidSubmit", eventOnValide);
+
+                EventCallback eventOnCancel = EventCallback.Factory.Create(this, AnnulerVirement);
+                builder.AddAttribute(5, "AnnulerVirement", eventOnCancel);
+
+                var eventOnSelectCompte = EventCallback.Factory.Create(this, OnChangeCompteVirement);
+                builder.AddAttribute(6, "OnSelectCompte", eventOnSelectCompte);
+
+                builder.CloseComponent();
+            };
+
+            DisplayRenderFragment = CreateCompo();
+        }
+
+        private async void OnChangeCompteVirement(object compte)
+		{
+            if (compte == null)
+            {
+                budgetsOnCompte = new List<Budget>();
+                StateChanged.Invoke();
+                return;
+            }
+
+            Compte compteSelected = (Compte)compte;
+            budgetsOnCompte = await dataContext.GetBudgets(compteSelected.Idcompte);
+            StateChanged.Invoke();
+        }
+
+        private async void OnValidSubmitVirement()
+		{
+            try
+            {
+                // Ligne pour le compte emetteur.
+                Suivicompte compteEmetteur = new Suivicompte()
+                {
+                    Datetransaction = VirementOperationValidation.DateTransaction,
+                    Nomtransaction = VirementOperationValidation.NomTransaction,
+                    Montant = decimal.Negate(VirementOperationValidation.Montant),
+                    Isvalidate = true, // toujours validé
+                    Typeid = 2, // Virement
+                    Idcompte = CompteSelected.Idcompte,
+                    Idannee = Configbank.Annee,
+                    Idmois = Configbank.Mois
+                };
+
+                // Ligne pour le compte receveur.
+                Suivicompte compteReceveur = new Suivicompte()
+                {
+                    Datetransaction = VirementOperationValidation.DateTransaction,
+                    Nomtransaction = VirementOperationValidation.NomTransaction,
+                    Montant = VirementOperationValidation.Montant,
+                    Isvalidate = true, // toujours validé
+                    Typeid = 2, // Virement
+                    Idcompte = VirementOperationValidation.CompteArrive.Idcompte,
+                    Idannee = Configbank.Annee,
+                    Idmois = Configbank.Mois
+                };
+				if (VirementOperationValidation.Budget != null)
+				{
+                    compteReceveur.Idbudget = VirementOperationValidation.Budget.Idbudget;
+				}
+
+				await dataContext.AddVirement(compteEmetteur, compteReceveur);
+
+                SuiviDuCompte.Add(compteEmetteur);
+				await SaisieGrid.Reload();
+
+                NotificationSuccess("Ajout OK", "Ajout de l'opération");
+                TransacValidation = new TransactionValidation();
+                StateChanged.Invoke();
+            }
+            catch (Exception ex)
+            {
+                ReportError(ex, "SuiviCompteViewModel - OnValidSubmit", "Saisie non créée");
+            }
+        }
+
+        private void AnnulerVirement()
+        {
+            DisplayRenderFragment = null;
+            VirementOperationValidation = new VirementOperationValidation();
+            StateChanged.Invoke();
+        }
+
+        #endregion
+
 
         #endregion
 

@@ -6,12 +6,12 @@
 	@* Super IMPORTANT !!! *@
 	<DataAnnotationsValidator />
 
-	<h2>Ajout d'une nouvelle opération bancaire</h2>
+	<h2>Faire un virement bancaire</h2>
 
 	<div class="row">
 		<div class="margin-5px w-50 col">
 			<div>
-			Date de la transaction
+			Date du virement
 			</div>
 
 			<RadzenDatePicker @bind-Value="ModelValidation.DateTransaction"
@@ -31,7 +31,24 @@
 
 		<div class="margin-5px col">
 			<div>
-				Montant de la transaction
+				Vers quel compte
+			</div>
+			<div>
+				<ValidationMessage For="@(() => ModelValidation.CompteArrive)" />
+			</div>
+			<RadzenDropDown AllowClear="true" 
+						TValue="Compte" 
+						Placeholder="Choisir un compte..." 
+						Data=@Comptes
+						TextProperty="Nomcompte"
+						@bind-Value="ModelValidation.CompteArrive"
+						 Change=@OnSelectCompte
+						 />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Montant du virement
 			</div>
 
 			<div>
@@ -40,8 +57,7 @@
 			<RadzenNumeric TValue="decimal" 
 							Format="c" 
 							@bind-Value="ModelValidation.Montant"
-							Placeholder="Montant" 
-							 />
+							Placeholder="Montant" />
 		</div>
 
 		<div class="margin-5px col">
@@ -57,59 +73,27 @@
 						@bind-Value="ModelValidation.Budget" />
 		</div>
 
-		<div class="margin-5px col">
-			<div>
-				Type de transaction
-			</div>
-
-			<div>
-				<ValidationMessage For="@(() => ModelValidation.TypeTransac)" />
-			</div>
-			<RadzenDropDown AllowClear="true" 
-						TValue="Typestransaction" 
-						Placeholder="Choisir un type..." 
-						Data=@Transactions
-						TextProperty="Nom"
-						@bind-Value="ModelValidation.TypeTransac"/>
-		</div>
-
-		<div class="margin-5px col">
-			<div>
-				Transaction validé ?
-			</div>
-
-			<RadzenCheckBox @bind-Value="ModelValidation.IsValide" 
-							Name="CheckBox1" 
-							TValue="bool" />
-		</div>
-
 		<div class="margin-10px col">
 			<button type="submit" class="padding-5">Ajouter</button>
 
 			<button type="reset"
 					class="padding-5"
-					@onclick="AnnuleSaisie">
+					@onclick="AnnulerVirement">
 				Annuler
 			</button>
 		</div>
 
 			</div>
 		</RadzenCard>
-
-	<div class="row">
-		<div>Ajouter cette ligne comme transaction répétée ?</div>
-		
-	</div>
 	</EditForm>
 </div>
 
 @code {
+	[Parameter]
+	public VirementOperationValidation ModelValidation { get; set; }
 
 	[Parameter]
-	public TransactionValidation ModelValidation { get; set; }
-
-	[Parameter]
-	public IEnumerable<Typestransaction> Transactions { get; set; }
+	public IEnumerable<Compte> Comptes { get; set; }
 
 	[Parameter]
 	public IEnumerable<Budget> Budgets { get; set; }
@@ -118,6 +102,9 @@
 	public EventCallback OnValidSubmit { get; set; }
 
 	[Parameter]
-	public EventCallback AnnuleSaisie { get; set; }
+	public EventCallback AnnulerVirement { get; set; }
+
+	[Parameter]
+	public EventCallback OnSelectCompte { get; set; }
 
 }

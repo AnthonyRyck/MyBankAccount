@@ -48,5 +48,13 @@
             return await context.Configbanks.Include(cpt => cpt.IdcomptedefaultNavigation)
                             .FirstOrDefaultAsync();
         }
+
+
+        public async Task AddVirement(Suivicompte comptePerdant, Suivicompte compteRecevant)
+		{
+            await context.AddAsync(comptePerdant);
+            await context.AddAsync(compteRecevant);
+            await context.SaveChangesAsync();
+        }
     }
 }

@@ -59,5 +59,8 @@
         void SetStateHasChanged(Action state);
 
         void DisplayNewOperation();
+
+
+        void DisplayVirement();
     }
 }
