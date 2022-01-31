@@ -58,27 +58,27 @@ namespace BlazorMyBankAccount.Data
         private async static Task InitTransaction(bankingContext dbContext)
         {
             Typestransaction typePrevision = new Typestransaction();
-            typePrevision.Nom = "Prévision";
+            typePrevision.Nom = TransactionType.Prévision.ToString();
             typePrevision.Description = "Prévision";
             await dbContext.AddAsync(typePrevision);
 
             Typestransaction typeVirement = new Typestransaction();
-            typeVirement.Nom = "Virement";
+            typeVirement.Nom = TransactionType.Virement.ToString();
             typeVirement.Description = "Virement bancaire";
             await dbContext.AddAsync(typeVirement);
 
             Typestransaction typeCarte = new Typestransaction();
-            typeCarte.Nom = "Carte";
+            typeCarte.Nom = TransactionType.Carte.ToString();
             typeCarte.Description = "Paiement par carte";
             await dbContext.AddAsync(typeCarte);
 
             Typestransaction typePrelevement = new Typestransaction();
-            typePrelevement.Nom = "Prélèvement";
+            typePrelevement.Nom = TransactionType.Prélèvement.ToString();
             typePrelevement.Description = "Prélèvement bancaire";
             await dbContext.AddAsync(typePrelevement);
 
             Typestransaction typeCheque = new Typestransaction();
-            typeCheque.Nom = "Chèque";
+            typeCheque.Nom = TransactionType.Chèque.ToString();
             typeCheque.Description = "Paiement par chèque";
             await dbContext.AddAsync(typeCheque);
         }

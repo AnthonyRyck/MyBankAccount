@@ -92,12 +92,30 @@
 
         public string GetMois()
         {
-            if(LaConfiguration == null)
+            return LaConfiguration.GetMois();
+        }
+
+        /// <inheritdoc cref="IAppConfig.OnClickChangeMois"/>
+        public async Task OnClickChangeMois()
+        {
+            int nouveauMois = LaConfiguration.Mois;
+            int nouvelleAnnee = LaConfiguration.Annee;
+
+            // Changement de mois et/ou d'annee
+            if (nouveauMois == 12)
             {
-                return "Aucun mois sélectionné";
+                nouveauMois = 1;
+                nouvelleAnnee++;
+            }
+            else
+            {
+                nouveauMois++;
             }
 
-            return new DateOnly(LaConfiguration.Annee, LaConfiguration.Mois, 1).ToString("MMMM");
+            LaConfiguration = await _contextData.AddOrUpdate(LaConfiguration.IdcomptedefaultNavigation, nouvelleAnnee, nouveauMois);
+
+            // Copie des transactions obligatoires dans la table suivie.
+            await _contextData.CreateNewMonth(LaConfiguration.Idcomptedefault, LaConfiguration.Annee, LaConfiguration.Mois);
         }
     }
 }

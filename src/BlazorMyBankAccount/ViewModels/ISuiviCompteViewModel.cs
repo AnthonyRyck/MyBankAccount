@@ -62,6 +62,12 @@ namespace BlazorMyBankAccount.ViewModels
         RadzenDataGrid<Suivicompte> SaisieGrid { get; set; }
 
         /// <summary>
+        /// Retourne en toute lettre le mois de traitement.
+        /// </summary>
+        /// <returns></returns>
+        string GetMois();
+
+        /// <summary>
         /// Initialise les donnees.
         /// </summary>
         Task InitData();

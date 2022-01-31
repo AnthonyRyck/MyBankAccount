@@ -100,6 +100,11 @@ namespace BlazorMyBankAccount.ViewModels
 
         }
 
+        public string GetMois()
+        {
+            return Configbank.GetMois();
+        }
+
         #region ContextMenu
 
         public void OnCellContextMenu(DataGridCellMouseEventArgs<Suivicompte> args)
@@ -225,6 +230,7 @@ namespace BlazorMyBankAccount.ViewModels
 
                 NotificationSuccess("Ajout OK", "Ajout de l'opération");
                 TransacValidation = new TransactionValidation();
+                FaireSomme();
                 StateChanged.Invoke();
             }
             catch (Exception ex)
@@ -285,6 +291,7 @@ namespace BlazorMyBankAccount.ViewModels
 
             Compte compteSelected = (Compte)compte;
             budgetsOnCompte = await dataContext.GetBudgets(compteSelected.Idcompte);
+            FaireSomme();
             StateChanged.Invoke();
         }
 
@@ -359,7 +366,10 @@ namespace BlazorMyBankAccount.ViewModels
                 Budget budgetSelected = Budgets.ToList()[num - 1];
                 SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois, budgetSelected.Idbudget);
 
-                MontantRestantBudget = budgetSelected.Montant.Value + SuiviDuCompte.Sum(x => x.Montant);
+                if(budgetSelected.Typebudget.Nomtypebudget == "Prévision dépense")
+                {
+                    MontantRestantBudget = budgetSelected.Montant.Value + SuiviDuCompte.Sum(x => x.Montant);
+                }
             }
         }
 
@@ -367,8 +377,11 @@ namespace BlazorMyBankAccount.ViewModels
 
         private void FaireSomme()
         {
+            // somme des budgets "depenses"
+            decimal montantsBudgets = Budgets.Sum(x => x.Montant) ?? decimal.Zero;
+
             MontantActuel = SuiviDuCompte.Where(x => x.Isvalidate).Sum(x => x.Montant);
-            MontantPrevisionnel = MontantActuel + SuiviDuCompte.Where(x => !x.Isvalidate).Sum(x => x.Montant);
+            MontantPrevisionnel = MontantActuel + SuiviDuCompte.Where(x => !x.Isvalidate).Sum(x => x.Montant) + decimal.Negate(montantsBudgets);
         }
 
     }

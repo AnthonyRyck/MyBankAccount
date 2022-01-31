@@ -24,5 +24,14 @@ namespace BlazorMyBankAccount.Data.Banking
         /// <param name="mois"></param>
         /// <returns></returns>
         Task<Configbank> AddOrUpdate(Compte compteParDefault, int annee, int mois);
+        
+        /// <summary>
+        /// Indique la création d'un nouveau mois.
+        /// </summary>
+        /// <param name="idCompteDefaut"></param>
+        /// <param name="annee"></param>
+        /// <param name="mois"></param>
+        /// <returns></returns>
+        Task CreateNewMonth(int idCompteDefaut, int annee, int mois);
     }
 }

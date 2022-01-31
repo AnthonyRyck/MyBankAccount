@@ -16,7 +16,9 @@
         /// <inheritdoc cref="ISuiviCompteData.((int)"/>
         public async Task<IEnumerable<Budget>> GetBudgets(int idCompte)
         {
-            return await context.Budgets.Where(x => x.Idcompte == idCompte).ToListAsync();
+            return await context.Budgets.Where(x => x.Idcompte == idCompte)
+                                    .Include(x => x.Typebudget)
+                                    .ToListAsync();
         }
 
 

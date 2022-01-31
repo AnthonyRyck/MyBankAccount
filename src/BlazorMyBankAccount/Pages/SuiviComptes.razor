@@ -26,8 +26,14 @@ else
 	@if(ViewModel.HasConfig)
 	{
 		<div>
-			<button @onclick="ViewModel.DisplayNewOperation">Nouvelle Operation</button>
-			<button @onclick="ViewModel.DisplayVirement">Virement</button>
+			<div class="col-4">
+				<button @onclick="ViewModel.DisplayNewOperation">Nouvelle Operation</button>
+				<button @onclick="ViewModel.DisplayVirement">Virement</button>
+			</div>
+			<div class="col-4">
+				Mois en cours : <strong>@ViewModel.GetMois()</strong>
+			</div>
+			
 		</div>
 
 		@if(ViewModel.DisplayRenderFragment != null)
@@ -41,10 +47,15 @@ else
 				Change=@ViewModel.LoadBudget >
 		<Tabs>
 			<RadzenTabsItem Text="Compte">
+			<div>
 				<div>
 					<span><strong>Actuelle</strong>: @ViewModel.MontantActuel</span>
+				</div>
+				<div>
 					<span><strong>Prévision</strong>: @ViewModel.MontantPrevisionnel</span>
 				</div>
+			</div>
+
 				<RadzenDataGrid AllowFiltering="true"
 							FilterCaseSensitivity="FilterCaseSensitivity.Default"
 							AllowPaging="true"
@@ -97,6 +108,9 @@ else
 			@foreach(Budget budget in ViewModel.Budgets)
 			{
 			<RadzenTabsItem Text="@budget.Nombudget">
+
+				<div><u>Type de budget</u> : @budget.Typebudget.Nomtypebudget</div>
+
 				<div>Montant de base : @budget.Montant</div>
 				<div>Montant restant : @ViewModel.MontantRestantBudget</div>
 

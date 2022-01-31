@@ -59,5 +59,11 @@
         /// </summary>
         /// <returns></returns>
         string GetMois();
+
+        /// <summary>
+        /// Permet de changer du mois, passe au prochain.
+        /// </summary>
+        /// <returns></returns>
+        Task OnClickChangeMois();
     }
 }

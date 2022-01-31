@@ -43,5 +43,31 @@
             return configbank;
         }
 
+
+        public async Task CreateNewMonth(int idCompteDefaut, int annee, int mois)
+        {
+            // Récupération des transactions mensuelles.
+            var allTransac = await context.Transactionobligatoires.ToListAsync();
+
+            // Créer dans le suivi de compte, les lignes "obligatoires".
+            foreach (var item in allTransac)
+            {
+                Suivicompte nouvelleLigne = new Suivicompte()
+                {
+                    Idcompte = idCompteDefaut,
+                    Idannee = annee,
+                    Idmois = mois,
+                    Type = item.Type,
+                    Montant = item.Montant,
+                    Nomtransaction = item.Nomtransaction,
+                    Isvalidate = false
+                };
+
+                await context.AddAsync(nouvelleLigne);
+            }
+
+            await context.SaveChangesAsync();
+        }
+
     }
 }

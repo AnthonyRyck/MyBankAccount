@@ -7,9 +7,11 @@ global using Microsoft.EntityFrameworkCore;
 global using BlazorMyBankAccount.ViewModels;
 global using BlazorMyBankAccount.ViewModels.Configuration;
 global using BankDataAccess;
+global using BlazorMyBankAccount.Data;
 global using BlazorMyBankAccount.Data.Banking;
 global using BlazorMyBankAccount.ValidationModels;
 global using BlazorMyBankAccount.Composants.SuiviCompte;
+global using BlazorMyBankAccount.Extensions;
 
 global using Radzen;
 global using Radzen.Blazor;
