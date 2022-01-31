@@ -18,8 +18,9 @@ namespace BlazorMyBankAccount.ValidationModels
         [Required(ErrorMessage = "Il faut indiquer un type de transaction")]
         public Typestransaction TypeTransac { get; set; }
 
+        public string Commentaire { get; set; }
 
-		public Budget Budget { get; set; }
+        public Budget Budget { get; set; }
 
 		public bool IsValide { get; set; } = false;
     }

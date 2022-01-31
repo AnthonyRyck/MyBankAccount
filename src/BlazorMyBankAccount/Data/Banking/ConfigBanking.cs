@@ -60,7 +60,8 @@
                     Type = item.Type,
                     Montant = item.Montant,
                     Nomtransaction = item.Nomtransaction,
-                    Isvalidate = false
+                    Isvalidate = false,
+                    Commentaire = item.Commentaire
                 };
 
                 await context.AddAsync(nouvelleLigne);

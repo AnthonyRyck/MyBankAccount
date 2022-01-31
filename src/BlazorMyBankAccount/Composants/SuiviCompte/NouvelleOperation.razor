@@ -11,7 +11,7 @@
 	<div class="row">
 		<div class="margin-5px w-50 col">
 			<div>
-			Date de la transaction
+			Date
 			</div>
 
 			<RadzenDatePicker @bind-Value="ModelValidation.DateTransaction"
@@ -27,6 +27,14 @@
 			</div>
 			<RadzenTextBox Placeholder="Nom..."
 						@bind-Value="ModelValidation.NomTransaction" />
+		</div>
+
+		<div class="margin-5px col">
+			<div>
+				Commentaire
+			</div>
+			<RadzenTextBox Placeholder="Commentaire..."
+						@bind-Value="ModelValidation.Commentaire" />
 		</div>
 
 		<div class="margin-5px col">

@@ -168,6 +168,7 @@ namespace BlazorMyBankAccount.ViewModels
                 Jour = ligneCompte.Datetransaction.Value.Day,
                 Montant = ligneCompte.Montant,
                 Nomtransaction = ligneCompte.Nomtransaction,
+                Commentaire = ligneCompte.Commentaire,
                 Type = ligneCompte.Type
             };
 
@@ -215,7 +216,8 @@ namespace BlazorMyBankAccount.ViewModels
                     Type = TransacValidation.TypeTransac,
                     Idcompte = CompteSelected.Idcompte,
                     Idannee = Configbank.Annee,
-                    Idmois = Configbank.Mois
+                    Idmois = Configbank.Mois,
+                    Commentaire = TransacValidation.Commentaire
                 };
 
                 if(TransacValidation.Budget != null)

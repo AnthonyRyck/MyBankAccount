@@ -11,7 +11,8 @@ namespace BankDataAccess
         public int Idmois { get; set; }
         public DateTime? Datetransaction { get; set; }
         public int Typeid { get; set; }
-        public string Nomtransaction { get; set; }
+        public string? Nomtransaction { get; set; }
+        public string? Commentaire { get; set; }
         public bool Isvalidate { get; set; }
         public decimal Montant { get; set; }
         public int? Idbudget { get; set; }

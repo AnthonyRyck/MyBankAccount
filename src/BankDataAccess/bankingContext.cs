@@ -7,7 +7,6 @@ namespace BankDataAccess
 {
     public partial class bankingContext : DbContext
     {
-
         public bankingContext(DbContextOptions<bankingContext> options)
             : base(options)
         {
@@ -22,6 +21,15 @@ namespace BankDataAccess
         public virtual DbSet<Transactionobligatoire> Transactionobligatoires { get; set; } = null!;
         public virtual DbSet<Typebudget> Typebudgets { get; set; } = null!;
         public virtual DbSet<Typestransaction> Typestransactions { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseMySql("server=127.0.0.1;user id=root;password=PassDevAccountBank;database=banking", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.25-mysql"));
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -171,6 +179,10 @@ namespace BankDataAccess
 
                 entity.Property(e => e.Idsuivi).HasColumnName("idsuivi");
 
+                entity.Property(e => e.Commentaire)
+                    .HasMaxLength(100)
+                    .HasColumnName("commentaire");
+
                 entity.Property(e => e.Datetransaction)
                     .HasColumnType("datetime")
                     .HasColumnName("datetransaction");
@@ -235,6 +247,10 @@ namespace BankDataAccess
                 entity.HasIndex(e => e.Typeid, "typeid");
 
                 entity.Property(e => e.Idtransac).HasColumnName("idtransac");
+
+                entity.Property(e => e.Commentaire)
+                    .HasMaxLength(100)
+                    .HasColumnName("commentaire");
 
                 entity.Property(e => e.Idcompte).HasColumnName("idcompte");
 

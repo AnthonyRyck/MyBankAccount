@@ -8,6 +8,7 @@ namespace BankDataAccess
         public int Idtransac { get; set; }
         public int Idcompte { get; set; }
         public string Nomtransaction { get; set; } = null!;
+        public string? Commentaire { get; set; }
         public decimal Montant { get; set; }
         public int Typeid { get; set; }
         public int Jour { get; set; }
