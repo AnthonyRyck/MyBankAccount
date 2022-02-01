@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.1-bullseye-slim AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+ENV DB_HOST="YourAddressdatabase"
+ENV LOGIN_DB="YourLogin"
+ENV PASSWORD_DB="YourPassword"
+ENV DB_NAME="YourDbName"
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0.101-bullseye-slim AS build
+WORKDIR /src
+COPY ["./src/BankDataAccess/", "BankDataAccess/"]
+COPY ["./src/BlazorMyBankAccount/", "BlazorMyBankAccount/"]
+
+RUN dotnet restore "BlazorMyBankAccount/BlazorMyBankAccount.csproj"
+RUN dotnet build "BlazorMyBankAccount/BlazorMyBankAccount.csproj" -c ReleaseDocker -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "BlazorMyBankAccount/BlazorMyBankAccount.csproj" -c ReleaseDocker -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "BlazorMyBankAccount.dll"]
