@@ -4,7 +4,7 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args); 
 
 #if (RELEASEDOCKER)
     string connectionDb = builder.Configuration.GetConnectionString("MySqlConnection");
