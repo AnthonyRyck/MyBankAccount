@@ -66,7 +66,7 @@ namespace BlazorMyBankAccount.ViewModels
                 SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
                 Budgets = await dataContext.GetBudgets(CompteSelected.Idcompte);
 
-                FaireSomme();
+                await FaireSomme();
 
                 HasConfig = true;
             }
@@ -89,7 +89,7 @@ namespace BlazorMyBankAccount.ViewModels
             SuiviDuCompte = await dataContext.GetSuivicomptes(compteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
             Budgets = await dataContext.GetBudgets(CompteSelected.Idcompte);
 
-            FaireSomme();
+            await FaireSomme();
 
             IsLoading = false;
         }
@@ -156,7 +156,7 @@ namespace BlazorMyBankAccount.ViewModels
         private async Task ValidateTransaction(Suivicompte ligneSuivi, bool canValidate)
         {
             await dataContext.Validate(ligneSuivi, canValidate);
-            FaireSomme();
+            await FaireSomme();
             StateChanged.Invoke();
         }
 
@@ -232,7 +232,7 @@ namespace BlazorMyBankAccount.ViewModels
 
                 NotificationSuccess("Ajout OK", "Ajout de l'opération");
                 TransacValidation = new TransactionValidation();
-                FaireSomme();
+                await FaireSomme();
                 StateChanged.Invoke();
             }
             catch (Exception ex)
@@ -293,7 +293,7 @@ namespace BlazorMyBankAccount.ViewModels
 
             Compte compteSelected = (Compte)compte;
             budgetsOnCompte = await dataContext.GetBudgets(compteSelected.Idcompte);
-            FaireSomme();
+            await FaireSomme();
             StateChanged.Invoke();
         }
 
@@ -367,18 +367,25 @@ namespace BlazorMyBankAccount.ViewModels
             await SaisieGrid.EditRow(suivicompte);
         }
 
-        private void OnUpdateRow(Suivicompte suivi)
-        {
-            
-        }
-
-
         public async Task SaveRow(Suivicompte suivicompte)
         {
             await dataContext.UpdateLigne(suivicompte);
             await SaisieGrid.UpdateRow(suivicompte);
+
+            // Si c'est un budget
+            if(suivicompte.Idbudget != null)
+            {
+                // update les sommes.
+                Budget budgetSelected = Budgets.FirstOrDefault(x => x.Idbudget == suivicompte.Idbudget);
+                
+                if (budgetSelected.Typebudget.Nomtypebudget == "Prévision dépense")
+                {
+                    MontantRestantBudget = budgetSelected.Montant.Value + SuiviDuCompte.Sum(x => x.Montant);
+                }
+            }
+            
+            await FaireSomme();
             IsRowEdit = false;
-            FaireSomme();
         }
 
         public void CancelEdit(Suivicompte suivicompte)
@@ -395,7 +402,7 @@ namespace BlazorMyBankAccount.ViewModels
             if (num == 0)
             {
                 SuiviDuCompte = await dataContext.GetSuivicomptes(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
-                FaireSomme();
+                await FaireSomme();
             }
             else
             {
@@ -411,13 +418,15 @@ namespace BlazorMyBankAccount.ViewModels
 
         #endregion
 
-        private void FaireSomme()
+        private async Task FaireSomme()
         {
             // somme des budgets "depenses"
-            decimal montantsBudgets = Budgets.Sum(x => x.Montant) ?? decimal.Zero;
+            decimal montantsBudgetsPrev = Budgets.Sum(x => x.Montant) ?? decimal.Zero;
+            decimal montantBudgetsValide = await dataContext.GetMontantBudgetValide(CompteSelected.Idcompte, Configbank.Annee, Configbank.Mois);
 
-            MontantActuel = SuiviDuCompte.Where(x => x.Isvalidate).Sum(x => x.Montant);
-            MontantPrevisionnel = MontantActuel + SuiviDuCompte.Where(x => !x.Isvalidate).Sum(x => x.Montant) + decimal.Negate(montantsBudgets);
+            MontantActuel = SuiviDuCompte.Where(x => x.Isvalidate).Sum(x => x.Montant) + montantBudgetsValide;
+
+            MontantPrevisionnel = MontantActuel + SuiviDuCompte.Where(x => !x.Isvalidate).Sum(x => x.Montant) + decimal.Negate(montantsBudgetsPrev);
         }
 
         private Suivicompte ToBackup(Suivicompte suivicompte)

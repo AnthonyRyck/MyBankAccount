@@ -31,6 +31,17 @@
                                                             && cpt.Idbudget == idBudget).ToListAsync();
         }
 
+        /// <inheritdoc cref="ISuiviCompteData.GetMontantBudgetValide(int, int, int)"/>
+        public async Task<decimal> GetMontantBudgetValide(int idcompte, int annee, int mois)
+        {
+            return await context.Suivicomptes.Where(cpt => cpt.Idcompte == idcompte
+                                                            && cpt.Idannee == annee
+                                                            && cpt.Idmois == mois
+                                                            && cpt.Idbudget != null
+                                                            && cpt.Isvalidate)
+                                            .SumAsync(x => x.Montant);
+        }
+
         /// <inheritdoc cref="ISuiviCompteData.GetTypesTransaction"/>
         public async Task<IEnumerable<Typestransaction>> GetTypesTransaction()
         {

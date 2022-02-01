@@ -70,5 +70,6 @@
         /// <param name="suivicompte"></param>
         /// <returns></returns>
         Task UpdateLigne(Suivicompte suivicompte);
+        Task<decimal> GetMontantBudgetValide(int idcompte, int annee, int mois);
     }
 }
