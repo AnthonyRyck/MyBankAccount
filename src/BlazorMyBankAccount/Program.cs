@@ -8,19 +8,24 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string connectionDb = builder.Configuration.GetConnectionString("MySqlConnection");
+#if (RELEASEDOCKER)
+    string connectionDb = builder.Configuration.GetConnectionString("MySqlConnection");
 
-// *** Dans le cas ou une utilisation avec DOCKER
-// *** voir post sur : https://www.ctrl-alt-suppr.dev/2021/02/01/connectionstring-et-image-docker/
-//string databaseAddress = Environment.GetEnvironmentVariable("DB_HOST");
-//string login = Environment.GetEnvironmentVariable("LOGIN_DB");
-//string mdp = Environment.GetEnvironmentVariable("PASSWORD_DB");
-//string dbName = Environment.GetEnvironmentVariable("DB_NAME");
+    // *** Dans le cas ou une utilisation avec DOCKER
+    // *** voir post sur : https://www.ctrl-alt-suppr.dev/2021/02/01/connectionstring-et-image-docker/
+    string databaseAddress = Environment.GetEnvironmentVariable("DB_HOST");
+    string login = Environment.GetEnvironmentVariable("LOGIN_DB");
+    string mdp = Environment.GetEnvironmentVariable("PASSWORD_DB");
+    string dbName = Environment.GetEnvironmentVariable("DB_NAME");
 
-//connectionDb = connectionDb.Replace("USERNAME", login)
-//						.Replace("YOURPASSWORD", mdp)
-//						.Replace("YOURDB", dbName)
-//						.Replace("YOURDATABASE", databaseAddress);
+    connectionDb = connectionDb.Replace("USERNAME", login)
+                            .Replace("YOURPASSWORD", mdp)
+                            .Replace("YOURDB", dbName)
+
+                            .Replace("YOURDATABASE", databaseAddress);
+#else
+string connectionDb = builder.Configuration.GetConnectionString("server=127.0.0.1;user id=root;password=PassDevAccountBank;database=banking");
+#endif
 
 // Pour les tables Indentity
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
