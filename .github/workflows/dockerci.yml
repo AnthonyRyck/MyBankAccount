@@ -3,7 +3,7 @@ name: .NET Docker CI
 on:
   push:
     paths:
-    - 'src/BlazorMyBankAccount/BlazorMyBankAccount**'
+    - 'src/BlazorMyBankAccount/**'
     - '!.github/workflows/**'
     - '!README.md'
 
