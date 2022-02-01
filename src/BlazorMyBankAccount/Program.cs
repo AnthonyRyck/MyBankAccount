@@ -1,5 +1,4 @@
 using BlazorMyBankAccount.Areas.Identity;
-using BlazorMyBankAccount.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
