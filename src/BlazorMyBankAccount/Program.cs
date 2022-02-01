@@ -4,7 +4,6 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 #if (RELEASEDOCKER)
