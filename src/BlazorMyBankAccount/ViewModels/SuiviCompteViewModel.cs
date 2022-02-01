@@ -355,7 +355,41 @@ namespace BlazorMyBankAccount.ViewModels
 
         #endregion
 
-        
+        #region Edit ligne
+
+        public bool IsRowEdit { get; private set; }
+        private Suivicompte ligneBackup;
+
+        public async Task EditRowSuivi(Suivicompte suivicompte)
+        {
+            IsRowEdit = true;
+            ligneBackup = ToBackup(suivicompte);
+            await SaisieGrid.EditRow(suivicompte);
+        }
+
+        private void OnUpdateRow(Suivicompte suivi)
+        {
+            
+        }
+
+
+        public async Task SaveRow(Suivicompte suivicompte)
+        {
+            await dataContext.UpdateLigne(suivicompte);
+            await SaisieGrid.UpdateRow(suivicompte);
+            IsRowEdit = false;
+            FaireSomme();
+        }
+
+        public void CancelEdit(Suivicompte suivicompte)
+        {
+            SaisieGrid.CancelEditRow(ReverseTo(suivicompte));
+            IsRowEdit = false;
+        }
+
+        #endregion
+
+
         public async Task LoadBudget(int num)
         {
             if (num == 0)
@@ -384,6 +418,49 @@ namespace BlazorMyBankAccount.ViewModels
 
             MontantActuel = SuiviDuCompte.Where(x => x.Isvalidate).Sum(x => x.Montant);
             MontantPrevisionnel = MontantActuel + SuiviDuCompte.Where(x => !x.Isvalidate).Sum(x => x.Montant) + decimal.Negate(montantsBudgets);
+        }
+
+        private Suivicompte ToBackup(Suivicompte suivicompte)
+        {
+            return new Suivicompte()
+            {
+                Commentaire = suivicompte.Commentaire,
+                Datetransaction = suivicompte.Datetransaction,
+                Idannee = suivicompte.Idannee,
+                IdanneeNavigation = suivicompte.IdanneeNavigation,
+                Idbudget = suivicompte.Idbudget,
+                Idcompte = suivicompte.Idcompte,
+                IdcompteNavigation = suivicompte.IdcompteNavigation,
+                Idmois = suivicompte.Idmois,
+                IdmoisNavigation = suivicompte.IdmoisNavigation,
+                Idsuivi = suivicompte.Idsuivi,
+                Isvalidate = suivicompte.Isvalidate,
+                Montant = suivicompte.Montant,
+                Nomtransaction = suivicompte.Nomtransaction,
+                Type = suivicompte.Type,
+                Typeid = suivicompte.Typeid
+            };
+        }
+
+        private Suivicompte ReverseTo(Suivicompte suivicompte)
+        {
+            suivicompte.Commentaire = ligneBackup.Commentaire;
+            suivicompte.Datetransaction = ligneBackup.Datetransaction;
+            suivicompte.Idannee = ligneBackup.Idannee;
+            suivicompte.IdanneeNavigation = ligneBackup.IdanneeNavigation;
+            suivicompte.Idbudget = ligneBackup.Idbudget;
+            suivicompte.Idcompte = ligneBackup.Idcompte;
+            suivicompte.IdcompteNavigation = ligneBackup.IdcompteNavigation;
+            suivicompte.Idmois = ligneBackup.Idmois;
+            suivicompte.IdmoisNavigation = ligneBackup.IdmoisNavigation;
+            suivicompte.Idsuivi = ligneBackup.Idsuivi;
+            suivicompte.Isvalidate = ligneBackup.Isvalidate;
+            suivicompte.Montant = ligneBackup.Montant;
+            suivicompte.Nomtransaction = ligneBackup.Nomtransaction;
+            suivicompte.Type = ligneBackup.Type;
+            suivicompte.Typeid = ligneBackup.Typeid;
+
+            return suivicompte;
         }
 
     }

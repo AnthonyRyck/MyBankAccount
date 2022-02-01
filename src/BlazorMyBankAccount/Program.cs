@@ -21,10 +21,9 @@ var builder = WebApplication.CreateBuilder(args);
     connectionDb = connectionDb.Replace("USERNAME", login)
                             .Replace("YOURPASSWORD", mdp)
                             .Replace("YOURDB", dbName)
-
                             .Replace("YOURDATABASE", databaseAddress);
 #else
-string connectionDb = builder.Configuration.GetConnectionString("server=127.0.0.1;user id=root;password=PassDevAccountBank;database=banking");
+string connectionDb = "server=127.0.0.1;user id=root;password=PassDevAccountBank;database=banking";
 #endif
 
 // Pour les tables Indentity

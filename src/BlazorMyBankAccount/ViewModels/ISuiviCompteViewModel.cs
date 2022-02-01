@@ -84,10 +84,23 @@ namespace BlazorMyBankAccount.ViewModels
         void DisplayNewOperation();
 
 
+
         void DisplayVirement();
 
         void OnCellContextMenu(DataGridCellMouseEventArgs<Suivicompte> args);
 
         Task LoadBudget(int num);
+
+
+        Task EditRowSuivi(Suivicompte suivicompte);
+
+        Task SaveRow(Suivicompte suivicompte);
+
+        void CancelEdit(Suivicompte suivicompte);
+
+        /// <summary>
+        /// Indique qu'une ligne est en cours d'édition
+        /// </summary>
+        bool IsRowEdit { get; }
     }
 }

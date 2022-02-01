@@ -74,26 +74,55 @@ else
 										  Title="Date"
 										  Filterable="false"
 										FormatString="{0:d}">
+							<EditTemplate Context="suivi">
+								<RadzenDatePicker @bind-Value="suivi.Datetransaction"
+												DateFormat="d" />
+							</EditTemplate>
 						</RadzenDataGridColumn>
 
 						@*Montant*@
 						<RadzenDataGridColumn TItem="Suivicompte"
 										  Property="Montant"
-										  Title="Montant" />
+										  Title="Montant">
+							<EditTemplate Context="suivi">
+								<RadzenNumeric TValue="decimal" 
+									Format="c" 
+									@bind-Value="suivi.Montant"
+									Placeholder="Montant"  />
+							</EditTemplate>
+						</RadzenDataGridColumn>
 			
 						@*Nom de la transaction*@
 						<RadzenDataGridColumn TItem="Suivicompte"
 										  Property="Nomtransaction"
-										  Title="Nom" />
+										  Title="Nom">
+							<EditTemplate Context="suivi">
+								<RadzenTextBox Placeholder="Nom..."
+									@bind-Value="suivi.Nomtransaction" />
+							</EditTemplate>
+						</RadzenDataGridColumn>
 						
 						<RadzenDataGridColumn TItem="Suivicompte"
 										  Property="Commentaire"
-										  Title="Commentaire" />
+										  Title="Commentaire" >
+							<EditTemplate Context="suivi">
+								<RadzenTextBox Placeholder="Commentaire..."
+									@bind-Value="suivi.Commentaire" />
+							</EditTemplate>
+						</RadzenDataGridColumn>
 						
 						@*Type*@
 						<RadzenDataGridColumn TItem="Suivicompte"
 										  Property="Type.Nom"
 										  Title="Type">
+
+							<EditTemplate Context="suivi">
+								<RadzenDropDown TValue="Typestransaction" 
+									Placeholder="Choisir un type..." 
+									Data=@ViewModel.TypesTransaction
+									TextProperty="Nom"
+									@bind-Value="suivi.Type"/>
+							</EditTemplate>
 						</RadzenDataGridColumn>
 						
 						<RadzenDataGridColumn TItem="Suivicompte"
@@ -106,6 +135,37 @@ else
 												TValue="bool" />
 							</Template>
 						</RadzenDataGridColumn>
+
+						@*Bouton pour faire une modification*@
+						<RadzenDataGridColumn TItem="Suivicompte" 
+											Filterable="false" 
+											Sortable="false" 
+											TextAlign="TextAlign.Center" Width="120px">
+						    <Template Context="suivi">
+						        <RadzenButton Icon="edit" 
+												ButtonStyle="ButtonStyle.Light" 
+												Class="m-1" 
+												Disabled="ViewModel.IsRowEdit"
+												Click="@(args => ViewModel.EditRowSuivi(suivi))" 
+												@onclick:stopPropagation="true">
+						        </RadzenButton>
+						    </Template>
+
+						    <EditTemplate Context="suivi">
+						        <RadzenButton Icon="check" 
+												ButtonStyle="ButtonStyle.Primary" 
+												Class="m-1" 
+												Click="@((args) => ViewModel.SaveRow(suivi))">
+						        </RadzenButton>
+						        <RadzenButton Icon="close" 
+												ButtonStyle="ButtonStyle.Light" 
+												Class="m-1" 
+												Click="@((args) => ViewModel.CancelEdit(suivi))">
+						        </RadzenButton>
+						    </EditTemplate>
+						</RadzenDataGridColumn>
+
+
 					</Columns>
 				</RadzenDataGrid>
 			</RadzenTabsItem>

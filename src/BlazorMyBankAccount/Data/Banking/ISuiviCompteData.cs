@@ -63,6 +63,12 @@
         /// <param name="isValidate"></param>
         /// <returns></returns>
         Task Validate(Suivicompte ligneSuivi, bool isValidate);
-
+        
+        /// <summary>
+        /// Met à jour la ligne.
+        /// </summary>
+        /// <param name="suivicompte"></param>
+        /// <returns></returns>
+        Task UpdateLigne(Suivicompte suivicompte);
     }
 }

@@ -71,5 +71,11 @@
             context.Update(ligneSuivi);
             await context.SaveChangesAsync();
         }
+
+        public async Task UpdateLigne(Suivicompte suivicompte)
+        {
+            context.Update(suivicompte);
+            await context.SaveChangesAsync();
+        }
     }
 }
