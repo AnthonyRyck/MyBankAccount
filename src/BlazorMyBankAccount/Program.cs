@@ -20,8 +20,10 @@ var builder = WebApplication.CreateBuilder(args);
                             .Replace("YOURPASSWORD", mdp)
                             .Replace("YOURDB", dbName)
                             .Replace("YOURDATABASE", databaseAddress);
-#else
+#elif DEBUG
 string connectionDb = "server=127.0.0.1;user id=root;password=PassDevAccountBank;database=banking";
+#else
+string connectionDb = builder.Configuration.GetConnectionString("MySqlConnection");
 #endif
 
 // Pour les tables Indentity
